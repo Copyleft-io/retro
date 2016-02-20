@@ -119,6 +119,11 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
 			  templateUrl: 'questions/create.html',
         controller: 'QuestionsCtrl as questionsCtrl'
       })
+		  .state('questions/edit', {
+			  url: '/questions/edit/{questionId}',
+			  templateUrl: 'questions/edit.html',
+        controller: 'QuestionsCtrl as questionsCtrl'
+      })
       .state('ideas', {
           url: '/ideas',
           controller: 'IdeasCtrl as ideasCtrl',
@@ -133,8 +138,44 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
           url: '/ideas/create',
           templateUrl: 'ideas/create.html',
           controller: 'IdeasCtrl as ideasCtrl'
+      })
+      .state('memos', {
+        url: '/memos',
+        templateUrl: 'memos/index.html',
+        controller: 'MemosCtrl as memosCtrl',
+        resolve: {
+          requests: ["Memos", function (Memos){
+             return Memos();
+           }],
+          auth: ["$state", "Users", "Auth", function($state, Users, Auth){
+            return Auth.$requireAuth().catch(function(){
+              $state.go('home');
+            });
+          }]
+        }
+      })
+      .state('memos/create', {
+        url: '/memos/create',
+        templateUrl: 'memos/create.html',
+        controller: 'MemosCtrl as memosCtrl',
+        resolve: {
+          auth: ["$state", "Users", "Auth", function($state, Users, Auth){
+            return Auth.$requireAuth().catch(function(){
+              $state.go('home');
+            });
+          }]
+        }
+      })
+      .state('memos/view', {
+        url: '/memos/view/{memoId}',
+        templateUrl: 'memos/view.html',
+        controller: 'MemosCtrl as memosCtrl'
+      })
+      .state('memos/edit', {
+        url: '/memos/edit/{memoId}',
+        templateUrl: 'memos/edit.html',
+        controller: 'MemosCtrl as memosCtrl'
       });
-
 
     $urlRouterProvider.otherwise('/')
 
@@ -438,13 +479,16 @@ console.log('--> retrofire/app/directory.controller.js loaded');
 app.controller("QuestionsCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObject", "$firebaseArray", "$stateParams", "ngTableParams", "$filter", "User", "Questions", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Questions) {
 
     $scope.questions = Questions();
-    $scope.userId = User.getId();
+    $scope.user = User;
 
     // add a new question
     $scope.create = function() {
+
       $scope.questions.$add({
-        user: $scope.question.user  || $scope.userId,
-        question: $scope.question.question
+
+        userId: $scope.question.userId  || User.getId(),
+        content: $scope.question.content,
+        createdAt: Firebase.ServerValue.TIMESTAMP
 
       }).then(function() {
         console.log('question Created');
@@ -469,11 +513,15 @@ app.controller("QuestionsCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseO
     $scope.getQuestion = function() {
       var ref = new Firebase(FIREBASE_URL + 'questions');
       $scope.question = $firebaseObject(ref.child($stateParams.questionId));
+      $scope.question.views.transaction(function (current_value) {
+        return (current_value || 0) + 1;
+      });
     };
 
     // update a question and save it
     $scope.update = function() {
       // save firebaseObject
+      $scope.question.updatedAt = Firebase.ServerValue.TIMESTAMP;
       $scope.question.$save().then(function(){
         console.log('question Updated');
         // redirect to /questions path after update
@@ -616,7 +664,8 @@ app.controller("IdeasCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObjec
     });
 }]);
 
-console.log('--> basestation/app/devices/ideas.controller.js loaded');
+console.log('--> retrofire/app/devices/ideas.controller.js loaded');
+
 'use strict';
 
 app.factory("Ideas", ["FIREBASE_URL", "$firebaseArray", function IdeaFactory(FIREBASE_URL, $firebaseArray) {
@@ -628,4 +677,152 @@ app.factory("Ideas", ["FIREBASE_URL", "$firebaseArray", function IdeaFactory(FIR
     }
 }]);
 
-console.log('--> basestation/app/ideas/ideas.service.js loaded');
+console.log('--> retrofire/app/ideas/ideas.service.js loaded');
+
+'use strict';
+
+app.controller("MemosCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObject", "$firebaseArray", "$stateParams", "ngTableParams", "$filter", "Memos", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, Memos ) {
+
+    $scope.memos = Memos();
+
+    // CORE CRUD FUNCTIONALITY
+    // - CREATE ($add firebaseObject to synchronized firebaseArray)
+    // - READ (get firebaseObject using stateParams and Firebase Reference)
+    // - UPDATE ($save firebaseObject)
+    // - DELETE ($remove firebaseObject)
+
+    // CREATE - ADD A NEW MEMO TO FIREBASE
+    $scope.create = function(memo) {
+      memo.createdAt = new Date().toString();
+      memo.views = 1;
+      $scope.memos.$add(memo).then(function() {
+        console.log('[ MemosCtrl ] --> Memo Created');
+
+        //$location.path('/memos');
+        $state.go('memos');
+
+      }).catch(function(error) {
+        console.log(error);
+      });
+    };
+
+
+    // READ - GET A MEMO FROM FIREBASE ON PAGE INIT FOR /memos/edit/:id route
+    $scope.getMemo = function() {
+      var ref = new Firebase(FIREBASE_URL + 'memos');
+      var memo;
+      //var memoRef = ref.child($stateParams.memoId);
+
+      $scope.memo = $firebaseObject(ref.child($stateParams.memoId));
+
+      ref.child($stateParams.memoId).once("value", function(snapshot) {
+        memo = snapshot.val();
+
+        var currentViews = memo.views;
+        var incrementViews = currentViews + 1;
+        var memoRef = ref.child($stateParams.memoId);
+        memoRef.update({
+         views: incrementViews
+        });
+      });
+
+
+      //console.log('memo = ' + $scope.memo);
+      // var memo = ref.child($stateParams.memoId).once("value", function(snapshot) {
+      //   var data = snapshot.exportVal();
+      // });
+      //
+      // console.log(memo);
+      // console.log('ViewCount = ' + memo.views);
+      // //console.log('ViewCount = ' + $scope.memo.views);
+      // function incrementViewCount() {
+      //   var currentViewCount = $scope.memo.views;
+      //   console.log('currentViewCount = ' + currentViewCount);
+      //   var updatedViewCount = currentViewCount + 1;
+      //   console.log('updatedViewCount = ' + updatedViewCount);
+      //   //return updatedViewCount;
+      //   return 2;
+      // };
+      //$scope.memo.views = 2;
+      //$scope.update();
+    };
+
+    // UPDATE - EDIT A MEMO AND SAVE IT TO FIREBASE
+    $scope.update = function() {
+      // save firebaseObject
+      $scope.memo.$save().then(function(){
+        console.log('[ MemosCtrl ] --> Memo Updated');
+
+        // redirect to /memos path after update
+        $state.go('memos');
+      }).catch(function(error){
+        console.log(error);
+      });
+    };
+
+    // DELETE - REMOVE A MEMO FROM FIREBASE
+    $scope.delete = function(memo) {
+        $scope.memos.$remove(memo).then(function(){
+            console.log('[ MemosCtrl ] --> Memo Deleted');
+
+            // redirect to /memos path after delete
+            $state.go('memos');
+        }).catch(function(error){
+            console.log(error);
+        });
+    };
+
+    // LOAD TAGS
+    // $scope.loadTags = function() {
+    //   return Tags();
+    // };
+
+    // DATA TABLE SYNCHRONIZATION USING NG-TABLE
+
+    // Since the data is asynchronous we'll need to use the $loaded promise.
+    // Once data is available we'll set the data variable and init the ngTable
+    $scope.memos.$loaded().then(function(memos) {
+      console.log(memos.length); // data is loaded here
+      var data = memos;
+
+      $scope.tableMemos = new ngTableParams({
+            page: 1,            // show first page
+            count: 10,          // count per page
+            sorting: { title: 'asc' }  // initial sorting
+        }, {
+            total: data.length, // length of data
+            getData: function($defer, params) {
+                // use build-in angular filter
+                var orderedData = params.sorting() ? $filter('filter')(data, params.filter()) : data;
+                $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+            }
+        });
+
+    });
+
+    // Listening for list updates to Memos to update DataTable
+    var ref = new Firebase(FIREBASE_URL + 'memos');
+    var list = $firebaseArray(ref);
+    list.$watch(function(event) {
+      console.log(event);
+      $scope.memos.$loaded().then(function(){
+        $scope.tableMemos.reload();
+      });
+    });
+
+}]);
+
+console.log('--> retrofire/app/memos/memos.controller.js loaded');
+
+'use strict';
+
+app.factory("Memos", ["FIREBASE_URL", "$firebaseArray", function MemosFactory(FIREBASE_URL, $firebaseArray) {
+  return function(){
+    // snapshot of our data
+    var ref = new Firebase(FIREBASE_URL + 'memos');
+    // returning synchronized array
+    return $firebaseArray(ref);
+  }
+}]);
+
+console.log('--> retrofire/app/memos/memos.service.js loaded');
