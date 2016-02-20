@@ -2,4 +2,4 @@
     width: 400px;
     height: 400px;
     text-align: left;
-  }</style> <div class="form-horizontal well" ng-init="getQuestion()"> {{question.content}} </div> <a href="#/questions" class="btn btn-sm btn-default">Back</a> <a ng-if="user.getId() == question.userId" href="#/questions/edit/{{question.$id}}" class="btn btn-sm btn-success"><i class="fa fa-pencil-square-o"> Edit</i></a>
+  }</style> <div class="form-horizontal well" ng-init="getQuestion()"> {{question.content}} </div> <button ng-click="upVote()">upVote</button> <button ng-click="downVote()">downVote</button> <a href="#/questions" class="btn btn-sm btn-default">Back</a> <a ng-if="user.getId() == question.userId" href="#/questions/edit/{{question.$id}}" class="btn btn-sm btn-success"><i class="fa fa-pencil-square-o"> Edit</i></a>

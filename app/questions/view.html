@@ -6,15 +6,16 @@
   }
 </style>
 <div class="form-horizontal well" ng-init="getQuestion()">
-  {{question.content}}
-
-  <br> Up Votes: {{question.upvotes.length || 0}}
-  <br> Down Votes: {{question.downvotes.length || 0}}
-
+  <h2>{{question.content}}<h2>
+  <h4>
+    <span class="btn btn-info">Views: # </span> &nbsp;
+    <span ng-click="upVote()" class="btn btn-success">Up Votes: {{question.upvotes.length || 0}}</span> &nbsp;
+    <span ng-click="downVote()" class="btn btn-warning">Down Votes: {{question.downvotes.length || 0}}</span>
+  </h4>
 </div>
-
-<button ng-click="upVote()">upVote</button>
-<button ng-click="downVote()">downVote</button>
-
+<!--
+<button class="btn btn-success" ng-click="upVote()">upVote</button>
+<button class="btn btn-warning" ng-click="downVote()">downVote</button>
+-->
 <a href="#/questions" class="btn btn-sm btn-default">Back</a>
 <a ng-if="user.getId() == question.userId" href="#/questions/edit/{{question.$id}}" class="btn btn-sm btn-success"><i class="fa fa-pencil-square-o"> Edit</i></a>
