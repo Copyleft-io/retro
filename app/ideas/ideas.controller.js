@@ -10,9 +10,8 @@ app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
         $scope.ideas.$add({
             name: $scope.idea.name,
             description: $scope.idea.description,
-            comments: ["testing"],
             //tags: $scope.idea.tags,
-            createdAt: new Date().toString(),
+            createdAt: Firebase.ServerValue.TIMESTAMP,
             views: 0,
             userId: User.getId()
         }).then(function() {
@@ -65,20 +64,14 @@ app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
     };
 
     $scope.addComment = function() {
-        if($scope.idea.comments[0] === "testing") {
-            $scope.idea.comments = [];
-        }
         var comment = {
             content: $scope.content,
             userId: User.getId(),
-            createdAt: new Date().toString()
+            createdAt: Firebase.ServerValue.TIMESTAMP
         };
-        $scope.idea.comments.push(comment);
-        var ref = new Firebase(FIREBASE_URL + 'ideas');
-        var refChild = ref.child($stateParams.ideaId);
-        refChild.update({
-           comments: $scope.idea.comments
-        });
+        var ref = new Firebase(FIREBASE_URL + 'ideas/' + $stateParams.ideaId);
+        var refChild = ref.child('comments');
+        refChild.push(comment);
         $scope.tableIdeas.reload();
     };
 
