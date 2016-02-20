@@ -134,16 +134,52 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
           controller: 'IdeasCtrl as ideasCtrl',
           templateUrl: 'ideas/index.html',
           resolve: {
-              questions: function (Ideas){
+              ideas: function (Ideas) {
                   return Ideas();
+              },
+              auth: function ($state, Users, Auth) {
+                  return Auth.$requireAuth().catch(function () {
+                      $state.go('home')
+                  });
               }
           }
       })
       .state('ideas/create', {
           url: '/ideas/create',
           templateUrl: 'ideas/create.html',
-          controller: 'IdeasCtrl as ideasCtrl'
+          controller: 'IdeasCtrl as ideasCtrl',
+          resolve: {
+              auth: function ($state, Users, Auth) {
+                  return Auth.$requireAuth().catch(function () {
+                      $state.go('home')
+                  });
+              }
+          }
       })
+        .state('ideas/edit', {
+            url: '/ideas/edit/{ideaId}',
+            templateUrl: 'ideas/edit.html',
+            controller: 'IdeasCtrl as ideasCtrl',
+            resolve: {
+                auth: function ($state, Users, Auth) {
+                    return Auth.$requireAuth().catch(function () {
+                        $state.go('home')
+                    });
+                }
+            }
+        })
+        .state('ideas/view', {
+            url: '/ideas/view/{ideaId}',
+            templateUrl: 'ideas/view.html',
+            controller: 'IdeasCtrl as ideasCtrl',
+            resolve: {
+                auth: function ($state, Users, Auth) {
+                    return Auth.$requireAuth().catch(function () {
+                        $state.go('home')
+                    });
+                }
+            }
+        })
       .state('memos', {
         url: '/memos',
         templateUrl: 'memos/index.html',

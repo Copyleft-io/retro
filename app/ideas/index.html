@@ -8,20 +8,20 @@
             <td data-title="'Name'" class="align-left" filter="{ 'name': 'text' }">
                 {{idea.name}}
             </td>
-            <td data-title="'Description'" class="align-left" filter="{ 'environment': 'text' }">
+            <td data-title="'Description'" class="align-left" filter="{ 'description': 'text' }">
                 {{idea.description}}
             </td>
-            <td data-title="'Views'" class="align-left" filter="{ 'private_ip': 'text' }">
+            <td data-title="'Views'" class="align-left" filter="{ 'views': 'text' }">
                 {{idea.views}}
             </td>
             <td>
-              <a href="#/ideas/create/{{idea.$id}}" class="btn btn-xs btn-primary"><i class="fa fa-puzzle-piece"> </i></a>
               <a href="#/ideas/view/{{idea.$id}}" class="btn btn-xs btn-default"><i class="fa fa-search"> </i></a>
-              <a href="#/ideas/edit/{{idea.$id}}" class="btn btn-xs btn-success"><i class="fa fa-pencil-square-o"> </i></a>
+              <a ng-if="user.getId() == idea.userId" href="#/ideas/edit/{{idea.$id}}" class="btn btn-xs btn-success"><i class="fa fa-pencil-square-o"> </i></a>
+                <a ng-if="user.getId() == idea.userId" href="" ng-click='delete(idea)' class="btn btn-xs btn-warning"><i class="fa fa-trash-o"> </i></a>
             </td>
         </tr>
 
     </table>
-    <a href="#/idea/create" class="btn btn-sm btn-primary pull-left" style="padding:10px;"><i class="fa fa-lg fa-plus"></i> &nbsp;Start an Idea</a>
+    <a href="#/ideas/create" class="btn btn-sm btn-primary pull-left" style="padding:10px;"><i class="fa fa-lg fa-plus"></i> &nbsp;Start an Idea</a>
 
 </div>
