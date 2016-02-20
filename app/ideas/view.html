@@ -12,9 +12,11 @@
         {{users.getDisplayName(user.getId())}}
       </div>
     </div>
-    <div class="form-group">
-      <div class="col-lg-10" ng-repeat="comment in idea.comments">
-          {{comment.content}}
+      <div class="list-group" style="padding-top: 18px;">
+        <a class="list-group-item" ng-repeat="comment in idea.comments">
+          <label>{{comment.content}}</label>
+          <div><label style="font-weight: normal; font-size: 12px; color: grey;">{{Users.getDisplayName(comment.userId)}}</label></div>
+        </a>
       </div>
     </div>
     <form class="form-horizontal well" >
