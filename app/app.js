@@ -104,24 +104,24 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
         templateUrl: 'directory/view.html',
         controller: 'DirectoryCtrl as directoryCtrl'
       })
-		  .state('questions', {
-			  url: '/questions',
-			  controller: 'QuestionsCtrl as questionsCtrl',
-			  templateUrl: 'questions/index.html',
-			  resolve: {
-				  questions: function (Questions){
-					  return Questions();
-				  }
-			  }
-		  })
-		  .state('questions/create', {
-			  url: '/questions/create',
-			  templateUrl: 'questions/create.html',
+      .state('questions', {
+        url: '/questions',
+        controller: 'QuestionsCtrl as questionsCtrl',
+        templateUrl: 'questions/index.html',
+        resolve: {
+          questions: function (Questions){
+            return Questions();
+          }
+        }
+      })
+      .state('questions/create', {
+        url: '/questions/create',
+        templateUrl: 'questions/create.html',
         controller: 'QuestionsCtrl as questionsCtrl'
       })
-		  .state('questions/edit', {
-			  url: '/questions/edit/{questionId}',
-			  templateUrl: 'questions/edit.html',
+      .state('questions/edit', {
+        url: '/questions/edit/{questionId}',
+        templateUrl: 'questions/edit.html',
         controller: 'QuestionsCtrl as questionsCtrl'
       })
       .state('ideas', {
