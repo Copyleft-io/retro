@@ -96,6 +96,27 @@
 </div>
 
   </uib-tab>
+  <uib-tab>
+    <uib-tab-heading><i class="fa fa-user-secret"></i> Security</uib-tab-heading>
+    <br>
+    <div class="form-group">
+    <label for="inputCurrentPassword" class="col-lg-1 control-label">Current Password</label>
+    <div class="col-lg-5">
+      <input name="currentPassword" type="password" class="form-control" id="inputCurrentPassword" placeholder="Current Password" ng-model="profileCtrl.profile.currentPassword">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputNewPassword" class="col-lg-1 control-label">Current Password</label>
+    <div class="col-lg-5">
+      <input name="newPassword" type="password" class="form-control" id="inputNewPassword" placeholder="New Password" ng-model="profileCtrl.profile.newPassword">
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-lg-offset-1">
+    <a href="#/profile" type="" ng-click="profileCtrl.changePassword()" class="btn btn-sm btn-danger"><i class="fa fa-lg fa-floppy-o"></i> &nbsp;&nbsp;RESET PASSWORD</a>
+  </div>
+</div>
+  </uib-tab>
 
 </uib-tabset>
 <br>
