@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','ui.router', 'ngTable', 'textAngular'])
+var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','ui.router', 'ngTable', 'ngTagsInput', 'textAngular'])
   .config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $urlRouterProvider) {
     $stateProvider
       .state('home', {
@@ -104,24 +104,29 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
         templateUrl: 'directory/view.html',
         controller: 'DirectoryCtrl as directoryCtrl'
       })
-		  .state('questions', {
-			  url: '/questions',
-			  controller: 'QuestionsCtrl as questionsCtrl',
-			  templateUrl: 'questions/index.html',
-			  resolve: {
-				  questions: ["Questions", function (Questions){
-					  return Questions();
-				  }]
-			  }
-		  })
-		  .state('questions/create', {
-			  url: '/questions/create',
-			  templateUrl: 'questions/create.html',
+      .state('questions', {
+        url: '/questions',
+        controller: 'QuestionsCtrl as questionsCtrl',
+        templateUrl: 'questions/index.html',
+        resolve: {
+          questions: ["Questions", function (Questions){
+            return Questions();
+          }]
+        }
+      })
+      .state('questions/create', {
+        url: '/questions/create',
+        templateUrl: 'questions/create.html',
         controller: 'QuestionsCtrl as questionsCtrl'
       })
-		  .state('questions/edit', {
-			  url: '/questions/edit/{questionId}',
-			  templateUrl: 'questions/edit.html',
+      .state('questions/edit', {
+        url: '/questions/edit/{questionId}',
+        templateUrl: 'questions/edit.html',
+        controller: 'QuestionsCtrl as questionsCtrl'
+      })
+      .state('questions/view', {
+        url: '/questions/{questionId}',
+        templateUrl: 'questions/view.html',
         controller: 'QuestionsCtrl as questionsCtrl'
       })
       .state('ideas', {
@@ -129,16 +134,52 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
           controller: 'IdeasCtrl as ideasCtrl',
           templateUrl: 'ideas/index.html',
           resolve: {
-              questions: ["Ideas", function (Ideas){
+              ideas: ["Ideas", function (Ideas) {
                   return Ideas();
+              }],
+              auth: ["$state", "Users", "Auth", function ($state, Users, Auth) {
+                  return Auth.$requireAuth().catch(function () {
+                      $state.go('home')
+                  });
               }]
           }
       })
       .state('ideas/create', {
           url: '/ideas/create',
           templateUrl: 'ideas/create.html',
-          controller: 'IdeasCtrl as ideasCtrl'
+          controller: 'IdeasCtrl as ideasCtrl',
+          resolve: {
+              auth: ["$state", "Users", "Auth", function ($state, Users, Auth) {
+                  return Auth.$requireAuth().catch(function () {
+                      $state.go('home')
+                  });
+              }]
+          }
       })
+        .state('ideas/edit', {
+            url: '/ideas/edit/{ideaId}',
+            templateUrl: 'ideas/edit.html',
+            controller: 'IdeasCtrl as ideasCtrl',
+            resolve: {
+                auth: ["$state", "Users", "Auth", function ($state, Users, Auth) {
+                    return Auth.$requireAuth().catch(function () {
+                        $state.go('home')
+                    });
+                }]
+            }
+        })
+        .state('ideas/view', {
+            url: '/ideas/view/{ideaId}',
+            templateUrl: 'ideas/view.html',
+            controller: 'IdeasCtrl as ideasCtrl',
+            resolve: {
+                auth: ["$state", "Users", "Auth", function ($state, Users, Auth) {
+                    return Auth.$requireAuth().catch(function () {
+                        $state.go('home')
+                    });
+                }]
+            }
+        })
       .state('memos', {
         url: '/memos',
         templateUrl: 'memos/index.html',
@@ -265,7 +306,7 @@ app.factory('Users', ["$firebaseArray", "$firebaseObject", "FIREBASE_URL", funct
         return users.$getRecord(uid).email;
       },
       getDisplayName: function(uid){
-        return users.$getRecord(uid).displayName;
+        return (users.$getRecord(uid)) != null ? users.$getRecord(uid).displayName : 'Unknown User';
       },
       getGravatar: function(uid){
         return '//www.gravatar.com/avatar/' + users.$getRecord(uid).emailHash;
@@ -476,18 +517,20 @@ console.log('--> retrofire/app/directory.controller.js loaded');
 
 'use strict';
 
-app.controller("QuestionsCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObject", "$firebaseArray", "$stateParams", "ngTableParams", "$filter", "User", "Questions", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Questions) {
+app.controller("QuestionsCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObject", "$firebaseArray", "$stateParams", "ngTableParams", "$filter", "User", "Users", "Questions", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Users, Questions) {
 
     $scope.questions = Questions();
     $scope.user = User;
+    $scope.users = Users;
 
     // add a new question
     $scope.create = function() {
 
       $scope.questions.$add({
 
-        userId: $scope.question.userId  || User.getId(),
+        userId: $scope.question.userId || User.getId(),
         content: $scope.question.content,
+        tags: $scope.question.tags || [ 'tomcat', 'hadoop', 'node.js' ],
         createdAt: Firebase.ServerValue.TIMESTAMP
 
       }).then(function() {
@@ -582,18 +625,20 @@ console.log('--> questions.service.js loaded');
 
 'use strict';
 
-app.controller("IdeasCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObject", "$firebaseArray", "$stateParams", "ngTableParams", "$filter", "Ideas", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, Ideas) {
+app.controller("IdeasCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObject", "$firebaseArray", "$stateParams", "ngTableParams", "$filter", "User", "Users", "Ideas", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Users, Ideas) {
     $scope.ideas = Ideas();
+    $scope.user = User;
+    $scope.users = Users;
 
     // add a new idea
     $scope.create = function() {
         $scope.ideas.$add({
             name: $scope.idea.name,
             description: $scope.idea.description,
-            comments: $scope.idea.comments,
-            tags: $scope.idea.tags,
-            views: $scope.idea.views,
-            userId: $scope.idea.userId
+            //tags: $scope.idea.tags,
+            createdAt: new Date().toString(),
+            views: 1,
+            userId: User.getId()
         }).then(function() {
             console.log('idea Created');
             $state.go('ideas');
@@ -616,8 +661,8 @@ app.controller("IdeasCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObjec
     $scope.getIdea = function() {
         var ref = new Firebase(FIREBASE_URL + 'ideas');
         $scope.idea = $firebaseObject(ref.child($stateParams.ideaId));
-        $scope.idea.views = $scope.idea.views++;
-        $scope.update();
+        /*$scope.idea.views = $scope.idea.views++;
+        $scope.update();*/
     };
 
     // update an idea and save it
@@ -632,13 +677,22 @@ app.controller("IdeasCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObjec
         });
     };
 
+    $scope.addComment = function(comment) {
+        if($scope.comments === 'undefined') {
+            $scope.comments = [];
+        }
+        $scope.idea.comments.push(comment);
+        $scope.update();
+        $scope.tableIdeas.reload();
+    }
+
     // Since the data is asynchronous we'll need to use the $loaded promise.
     // Once data is available we'll set the data variable and init the ngTable
     $scope.ideas.$loaded().then(function(ideas) {
         console.log(ideas.length); // data is loaded here
         var data = ideas;
 
-        $scope.tableDevices = new ngTableParams({
+        $scope.tableIdeas = new ngTableParams({
             page: 1,            // show first page
             count: 10,          // count per page
             sorting: { name: 'asc' }    // initial sorting
@@ -659,7 +713,7 @@ app.controller("IdeasCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObjec
     list.$watch(function(event) {
         console.log(event);
         $scope.ideas.$loaded().then(function(){
-            $scope.tableDevices.reload();
+            $scope.tableIdeas.reload();
         });
     });
 }]);

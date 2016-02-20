@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller("MemosCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, Memos ) {
+app.controller("MemosCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, Memos, User ) {
 
     $scope.memos = Memos();
 
@@ -13,6 +13,8 @@ app.controller("MemosCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
     // CREATE - ADD A NEW MEMO TO FIREBASE
     $scope.create = function(memo) {
       memo.createdAt = new Date().toString();
+      memo.createdBy = User.getEmail();
+      memo.createdById = User.getId();
       memo.views = 1;
       $scope.memos.$add(memo).then(function() {
         console.log('[ MemosCtrl ] --> Memo Created');
