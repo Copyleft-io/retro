@@ -6,15 +6,11 @@ app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
     $scope.users = Users;
 
     // add a new idea
-    $scope.create = function() {
-        $scope.ideas.$add({
-            name: $scope.idea.name,
-            content: $scope.idea.content,
-            //tags: $scope.idea.tags,
-            createdAt: Firebase.ServerValue.TIMESTAMP,
-            views: 0,
-            userId: User.getId()
-        }).then(function() {
+    $scope.create = function(idea) {
+        idea.createdAt = Firebase.ServerValue.TIMESTAMP;
+        idea.userId = User.getId();
+        idea.views = 0;
+        $scope.ideas.$add(idea).then(function() {
             console.log('idea Created');
             $state.go('ideas');
 
@@ -63,9 +59,9 @@ app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
         });
     };
 
-    $scope.addComment = function() {
+    $scope.addComment = function(newContent) {
         var comment = {
-            content: $scope.content,
+            content: newContent,
             userId: User.getId(),
             createdAt: Firebase.ServerValue.TIMESTAMP
         };
@@ -73,6 +69,7 @@ app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
         var refChild = ref.child('comments');
         refChild.push(comment);
         $scope.tableIdeas.reload();
+        $scope.newContent = "";
     };
 
     // Since the data is asynchronous we'll need to use the $loaded promise.

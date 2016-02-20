@@ -1,41 +1,79 @@
 
 <form class="form-horizontal well" ng-init="getIdea()">
-  <fieldset>
-    <legend>{{idea.name}}</legend>
-    <div class="form-group">
-      <div class="col-lg-10">
-        <input type="text" class="form-control" id="inputId" placeholder="id" ng-model="idea.content" readonly>
-      </div>
+<fieldset>
+  <h2>{{idea.title}}</h2>
+  <p><strong>By</strong> <a href="#/directory/user/{{idea.userId}}">{{users.getDisplayName(idea.userId)}}</a>
+    <br>{{idea.createdAt | date:'yyyy-MM-dd HH:mm'}}</p>
+
+  <h4>
+    <span class="label label-info">{{idea.views}} &nbsp;VIEWS</span> &nbsp;
+    <span class="label label-warning"> # VOTES</span> &nbsp;
+    <span class="label label-success"> # COMMENTS</span> &nbsp;
+  </h4>
+  <hr>
+  <div class="form-group">
+    <label for="inputTags" class="col-lg-1 control-label">Tags</label>
+    <div class="col-lg-10">
+      <tags-input disabled="true" ng-model="idea.tags">
+      </tags-input>
     </div>
-    <div class="form-group">
-      <div class="col-lg-10">
-        {{users.getDisplayName(user.getId())}}
-      </div>
-    </div>
-      <div class="list-group" style="padding-top: 18px;">
-        <a class="list-group-item" ng-repeat="comment in idea.comments">
-          <label>{{comment.content}}</label>
-          <div><label style="font-weight: normal; font-size: 12px; color: grey;">{{Users.getDisplayName(comment.userId)}}</label></div>
-        </a>
-      </div>
-    <form class="form-horizontal well" >
+  </div>
+  <br>
+  <uib-tabset>
+    <uib-tab>
+      <uib-tab-heading> <i class="fa fa-newspaper-o"></i> Idea </uib-tab-heading>
+      <br>
+
       <div class="form-group">
-        <label for="textAreaDescription" class="col-lg-2 control-label">Add Comment</label>
+        <label for="inputContent" class="col-lg-1 control-label"></label>
         <div class="col-lg-10">
-          <textarea class="form-control" rows="3" id="content" ng-model="content"></textarea>
+          <div ta-bind ng-model="idea.content" ></div>
         </div>
       </div>
-      <div class="form-group">
-        <div class="col-lg-10 col-lg-offset-2">
-          <button type="submit" class="btn btn-sm btn-primary" ng-click="addComment()">Save</button>
+
+      </div>
+
+      <br>
+    </uib-tab>
+    <uib-tab>
+      <uib-tab-heading> <i class="fa fa-comment"></i> Comments </uib-tab-heading>
+      <br>
+      <div class="row">
+        <br><div class="col-lg-offset-1">
+        <p class="lead">Comments</p>
+        <div ng-repeat="comment in idea.comments">
+          <p><a href="#/directory/user/{{comment.createdById}}">{{users.getDisplayName(comment.userId)}}</a> | {{comment.createdAt | date:'yyyy-MM-dd HH:mm'}}</p>
+          <div class="well">
+            <div ta-bind ng-model="comment.content" ></div>
+            </p>
+          </div>
+          <br>
         </div>
       </div>
-    </form>
-    <div class="form-group">
-      <div class="col-lg-10">
-        <a href="#/ideas" class="btn btn-sm btn-default"><i class="fa fa-lg fa-arrow-left"></i> &nbsp;BACK</a>
-        <a ng-if="user.getId() == idea.userId" href="#/ideas/edit/{{idea.$id}}" class="btn btn-sm btn-success"><i class="fa fa-lg fa-pencil-square-o"> &nbsp;EDIT</i></a>
       </div>
+      <div class="row">
+        <br>
+        <div class="col-lg-offset-1">
+          <hr>
+          <p class="lead">New Comment</p>
+          <div class="form-group">
+            <div class="col-lg-10">
+              <div text-angular ng-model="newContent" ></div>
+            </div>
+          </div>
+          <a href="" ng-click='addComment(newContent)' class="btn btn-sm btn-success"><i class="fa fa-plus"> </i> ADD COMMENT</a>
+        </div>
+      </div>
+    </uib-tab>
+  </uib-tabset>
+  <hr>
+  <div class="form-group">
+    <div class="col-lg-10">
+      <a href="#/ideas" class="btn btn-sm btn-default"><i class="fa fa-lg fa-arrow-left"></i> &nbsp;BACK</a>
+      <a href="#/ideas/edit/{{idea.$id}}" class="btn btn-sm btn-success"><i class="fa fa-lg fa-pencil-square-o"> &nbsp;EDIT</i></a>
     </div>
-  </fieldset>
+  </div>
+  </uib-tabset>
+</fieldset>
 </form>
+
