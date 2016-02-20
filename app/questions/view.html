@@ -6,7 +6,11 @@
   }
 </style>
 <div class="form-horizontal well" ng-init="getQuestion()">
-    {{question.content}}
+  {{question.content}}
+
+  <br> Up Votes: {{question.upvotes.length || 0}}
+  <br> Down Votes: {{question.downvotes.length || 0}}
+
 </div>
 
 <button ng-click="upVote()">upVote</button>

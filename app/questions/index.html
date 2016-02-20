@@ -314,8 +314,8 @@
 
             </h3>
             <div id="DIV_18">
-          <span ng-repeat="tag in question.tags">
-            <a href="/questions/tagged/{{tag}}" title="show questions tagged '{{tag}}'" rel="tag" id="A_19">{{tag}}</a>
+          <span ng-repeat="(id, tag) in question.tags">
+            <a href="/questions/tagged/{{tag.text}}" title="show questions tagged '{{tag.text}}'" rel="tag" id="A_19">{{tag.text}}</a>
           </span>
 
             </div>
