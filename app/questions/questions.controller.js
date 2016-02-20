@@ -23,6 +23,7 @@ app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebase
       $scope.questions.$add({
 
         userId: $scope.question.userId || User.getId(),
+        title: $scope.question.title,
         content: $scope.question.content,
         tags: $scope.question.tags || [ 'tomcat', 'hadoop', 'node.js' ],
         views: 0,
@@ -89,7 +90,7 @@ app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebase
         deleteFromArray(scopeObject.upvotes, User.getId());
       }
 
-      scopeObject.votes = scopeObject.upvotes.length + scopeObject.downvotes.length;
+      scopeObject.votes = scopeObject.upvotes.length - scopeObject.downvotes.length;
       $scope.update()
 
     };
@@ -110,7 +111,7 @@ app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebase
       console.log("Removing vote");
       deleteFromArray(scopeObject.downvotes, User.getId());
     }
-    scopeObject.votes = scopeObject.upvotes.length + scopeObject.downvotes.length;
+    scopeObject.votes = scopeObject.upvotes.length - scopeObject.downvotes.length;
     $scope.update()
 
   };

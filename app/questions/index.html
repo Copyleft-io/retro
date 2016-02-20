@@ -310,7 +310,7 @@
 
               <a ng-if="user.getId() == question.userId" href="#/questions/edit/{{question.$id}}" class="btn btn-xs btn-primary"><i class="fa fa-puzzle-piece"> </i></a>
               <a ng-if="user.getId() == question.userId" href="" ng-click='delete(question)' class="btn btn-xs btn-warning"><i class="fa fa-trash-o"> </i></a>
-              <a href="#/questions/{{question.$id}}" title="View question {{question.title}}" id="A_17">{{question.content}}</a>
+              <a href="#/questions/{{question.$id}}" title="View question {{question.title}}" id="A_17">{{question.title}}</a>
 
             </h3>
             <div id="DIV_18">

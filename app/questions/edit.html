@@ -3,9 +3,14 @@
   <fieldset>
     <legend>Edit question</legend>
 
+    <label for="inputTitle" class="col-lg-2 control-label">Title</label>
+    <div class="col-lg-10">
+      <input type="text" class="form-control" id="inputTitle" placeholder="Do you know the muffin man?" ng-model="question.title" >
+    </div>
+
     <label for="inputQuestion" class="col-lg-2 control-label">Question</label>
     <div class="col-lg-10">
-      <input type="text" class="form-control" id="inputQuestion" placeholder="Do you know the muffin man?" ng-model="question.content" >
+      <input type="text" class="form-control" id="inputQuestion" placeholder="Details about your question" ng-model="question.content" >
     </div>
 
     <label for="inputTags" class="col-lg-2 control-label">Tags</label>
