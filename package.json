@@ -10,6 +10,10 @@
   "description": "Old School Innovation built for today's pioneers... Angular + Firebase Real-Time Innovation Platform for Organizations designed by the hobbyists at Copyleft.io",
   "dependencies": {},
   "repository": {},
+  "scripts" : {
+    "build": "grunt build",
+    "start": "grunt serve"
+  },
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-autoprefixer": "^2.0.0",

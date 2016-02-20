@@ -1,0 +1,10 @@
+language: node
+sudo: false
+before_script: npm install -g grunt
+script: npm run build
+cache:
+  directories:
+  - node_modules
+deploy:
+  provider: firebase
+  skip_cleanup: true
