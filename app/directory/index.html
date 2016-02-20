@@ -1,0 +1,26 @@
+<h3><i class="fa fa-book"></i> &nbsp; Directory</h3>
+
+<br/>
+<button ng-click="tableDirectory.filter({})" class="btn btn-sm pull-right" style="padding:10px;">Clear Filter</button>
+    <table ng-table="tableDirectory" class="table table-striped table-bordered" show-filter="true">
+
+        <tr ng-repeat="user in $data">
+          <td data-title="'Display Name'" class="align-left" filter="{ 'displayName': 'text' }">
+              {{user.displayName}}
+          </td>
+          <td data-title="'First Name'" class="align-left" filter="{ 'firstName': 'text' }">
+              {{user.firstName}}
+          </td>
+          <td data-title="'Last Name'" class="align-left" filter="{ 'lastName': 'text' }">
+              {{user.lastName}}
+          </td>
+            <td data-title="'Email'" class="align-left" filter="{ 'email': 'text' }">
+                {{user.email}}
+            </td>
+            <td>
+              <a href="#/directory/user/{{user.$id}}" class="btn btn-xs btn-default"><i class="fa fa-search"> </i></a>
+            </td>
+        </tr>
+
+    </table>
+  </div>

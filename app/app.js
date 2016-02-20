@@ -34,6 +34,23 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
         url: '/about',
         templateUrl: 'static/about.html'
       })
+      .state('profile', {
+        url: '/profile',
+        controller: 'ProfileCtrl as profileCtrl',
+        templateUrl: 'users/profile.html',
+        resolve: {
+          auth: function($state, Users, Auth){
+            return Auth.$requireAuth().catch(function(){
+              $state.go('home');
+            });
+          },
+          profile: function(Users, Auth){
+            return Auth.$requireAuth().then(function(auth){
+              return Users.getProfile(auth.uid).$loaded();
+            });
+          }
+        }
+      })
       .state('dashboard', {
         url: '/dashboard',
         controller: 'DashboardCtrl as dashboardCtrl',
@@ -50,6 +67,28 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
             });
           }
         }
+      })
+      .state('directory', {
+        url: '/directory',
+        controller: 'DirectoryCtrl as directoryCtrl',
+        templateUrl: 'directory/index.html',
+        resolve: {
+          auth: function($state, Users, Auth){
+            return Auth.$requireAuth().catch(function(){
+              $state.go('login');
+            });
+          },
+          dashboard: function(Users, Auth){
+            return Auth.$requireAuth().then(function(auth){
+              return Users.getProfile(auth.uid).$loaded();
+            });
+          }
+        }
+      })
+      .state('directory/user', {
+        url: '/directory/user/{userId}',
+        templateUrl: 'directory/view.html',
+        controller: 'DirectoryCtrl as directoryCtrl'
       });
     $urlRouterProvider.otherwise('/');
   })
