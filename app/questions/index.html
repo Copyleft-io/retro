@@ -5,12 +5,15 @@
     <table ng-table="tablequestions" class="table table-striped table-bordered" show-filter="true">
 
         <tr ng-repeat="question in $data">
+
             <td data-title="'Name'" class="align-left" filter="{ 'name': 'text' }">
-                {{question.question}}
+                {{question.content}}
             </td>
             <td>
-              <a href="#/questions/config/{{question.$id}}" class="btn btn-xs btn-primary"><i class="fa fa-puzzle-piece"> </i></a>
+              <a ng-if="user.getId() == question.userId" href="#/questions/edit/{{question.$id}}" class="btn btn-xs btn-primary"><i class="fa fa-puzzle-piece"> </i></a>
+              <a ng-if="user.getId() == question.userId" href="" ng-click='delete(question)' class="btn btn-xs btn-warning"><i class="fa fa-trash-o"> </i></a>
             </td>
+
         </tr>
 
     </table>

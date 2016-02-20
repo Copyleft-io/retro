@@ -119,6 +119,11 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
 			  templateUrl: 'questions/create.html',
         controller: 'QuestionsCtrl as questionsCtrl'
       })
+		  .state('questions/edit', {
+			  url: '/questions/edit/{questionId}',
+			  templateUrl: 'questions/edit.html',
+        controller: 'QuestionsCtrl as questionsCtrl'
+      })
       .state('ideas', {
           url: '/ideas',
           controller: 'IdeasCtrl as ideasCtrl',

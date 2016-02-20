@@ -3,13 +3,16 @@
 app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Questions) {
 
     $scope.questions = Questions();
-    $scope.userId = User.getId();
+    $scope.user = User;
 
     // add a new question
     $scope.create = function() {
+
       $scope.questions.$add({
-        user: $scope.question.user  || $scope.userId,
-        question: $scope.question.question
+
+        userId: $scope.question.userId  || User.getId(),
+        content: $scope.question.content,
+        createdAt: Firebase.ServerValue.TIMESTAMP
 
       }).then(function() {
         console.log('question Created');
@@ -34,11 +37,15 @@ app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebase
     $scope.getQuestion = function() {
       var ref = new Firebase(FIREBASE_URL + 'questions');
       $scope.question = $firebaseObject(ref.child($stateParams.questionId));
+      $scope.question.views.transaction(function (current_value) {
+        return (current_value || 0) + 1;
+      });
     };
 
     // update a question and save it
     $scope.update = function() {
       // save firebaseObject
+      $scope.question.updatedAt = Firebase.ServerValue.TIMESTAMP;
       $scope.question.$save().then(function(){
         console.log('question Updated');
         // redirect to /questions path after update
