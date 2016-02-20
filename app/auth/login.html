@@ -1,0 +1,30 @@
+<div class="page-wrapper">
+
+  <div class="page-header">
+      <span class="text-center">
+      <p><img style="height:256px; width:300px;" src="images/retrofire.png" /></p>
+      <h1>Retrofire</h1>
+        <p class="lead">Old School Innovation</p>
+      </span>
+  </div>
+
+  <div ng-show="authCtrl.error">
+    <span>{{ authCtrl.error.message }}</span>
+  </div>
+
+
+  <form class="form-inline text-center" ng-submit="authCtrl.login()">
+    <div class="input-group">
+      <input type="email" class="form-control" placeholder="Email" ng-model="authCtrl.user.email">
+    </div>
+    &nbsp;&nbsp;
+    <div class="input-group">
+      <input type="password" class="form-control" placeholder="Password" ng-model="authCtrl.user.password">
+    </div>
+    &nbsp;&nbsp;
+    <button type="submit" class="btn btn-success" >Login</button>
+    </form>
+
+  <!--<a ng-click="authCtrl.google()" class="btn btn-default">Google Auth</a>-->
+
+</div>

@@ -1,0 +1,111 @@
+
+<form name="profileForm" class="form-horizontal well" ng-submit="profileCtrl.updateProfile()" >
+  <fieldset>
+    <legend>Edit Profile</legend>
+    <br>
+      <img id="gravatar" src="https://www.gravatar.com/avatar/{{profileCtrl.profile.emailHash}}">
+      <p>&nbsp;&nbsp;&nbsp;<a href="https://www.gravatar.com/" target="_blank">Gravatar</a></p>
+      <p class="lead">{{profileCtrl.profile.displayName}}</p>
+    <br>
+    <uib-tabset>
+        <uib-tab>
+          <uib-tab-heading><i class="fa fa-user"></i> Personal</uib-tab-heading>
+          <br>
+    <div class="form-group">
+      <label for="inputUsername" class="col-lg-1 control-label">Username</label>
+      <div class="col-lg-5">
+        <input name="username" type="text" class="form-control" id="inputUsername" placeholder="Username" ng-model="profileCtrl.profile.email" readonly >
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputDisplayName" class="col-lg-1 control-label">Display Name</label>
+      <div class="col-lg-5">
+      <input name="displayName" required type="text" class="form-control" placeholder="Display Name" ng-model="profileCtrl.profile.displayName">
+    </div>
+  </div>
+    <div class="form-group">
+      <label for="inputFirstName" class="col-lg-1 control-label">First Name</label>
+      <div class="col-lg-5">
+      <input name="firstName" required type="text" class="form-control" placeholder="First Name" ng-model="profileCtrl.profile.firstName">
+    </div>
+  </div>
+    <div class="form-group">
+      <label for="inputLastName" class="col-lg-1 control-label">Last Name</label>
+      <div class="col-lg-5">
+      <input name="lastName" required type="text" class="form-control" placeholder="Last Name" ng-model="profileCtrl.profile.lastName">
+    </div>
+  </div>
+
+    <div class="form-group">
+      <label for="textAreaBio" class="col-lg-1 control-label">Bio</label>
+      <div class="col-lg-5">
+        <textarea name="bio" class="form-control" rows="3" id="textArea" ng-model="profileCtrl.profile.bio"></textarea>
+      </div>
+    </div>
+  </uib-tab>
+
+  <uib-tab>
+    <uib-tab-heading><i class="fa fa-group"></i> Organization</uib-tab-heading>
+    <br>
+    <div class="form-group">
+      <label for="inputDepartment" class="col-lg-1 control-label">Department</label>
+      <div class="col-lg-5">
+        <input name="department" type="text" class="form-control" id="inputDepartment" placeholder="Department" ng-model="profileCtrl.profile.department" >
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputTeam" class="col-lg-1 control-label">Team</label>
+      <div class="col-lg-5">
+        <input name="team" type="text" class="form-control" id="inputTeam" placeholder="Team" ng-model="profileCtrl.profile.team" >
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputManager" class="col-lg-1 control-label">Manager</label>
+      <div class="col-lg-5">
+        <input name="manager" type="text" class="form-control" id="inputManager" placeholder="Manager" ng-model="profileCtrl.profile.manager" >
+      </div>
+    </div>
+  </uib-tab>
+
+  <uib-tab>
+    <uib-tab-heading><i class="fa fa-phone"></i> Contact</uib-tab-heading>
+    <br>
+    <div class="form-group">
+      <label for="inputWorkPhone" class="col-lg-1 control-label">Work</label>
+      <div class="col-lg-5">
+      <input name="workPhone" type="text" class="form-control" placeholder="Work Telephone" ng-model="profileCtrl.profile.workPhone">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputMobilePhone" class="col-lg-1 control-label">Mobile</label>
+    <div class="col-lg-5">
+    <input name="mobilePhone" type="text" class="form-control" placeholder="Mobile Telephone" ng-model="profileCtrl.profile.mobilePhone">
+  </div>
+</div>
+<div class="form-group">
+  <label for="inputHomePhone" class="col-lg-1 control-label">Home</label>
+  <div class="col-lg-5">
+  <input name="homePhone" type="text" class="form-control" placeholder="Home Telephone" ng-model="profileCtrl.profile.homePhone">
+</div>
+</div>
+<div class="form-group">
+  <label for="inputEmail" class="col-lg-1 control-label">Email</label>
+  <div class="col-lg-5">
+    <input name="email" type="text" class="form-control" id="inputEmail" placeholder="Email" ng-model="profileCtrl.profile.email" readonly >
+  </div>
+</div>
+
+  </uib-tab>
+
+</uib-tabset>
+<br>
+<hr>
+    <div class="form-group">
+      <div class="col-lg-10 col-lg-offset-1">
+        <a href="#/dashboard" type="reset" class="btn btn-sm btn-default"><i class="fa fa-lg fa-times"></i> &nbsp;&nbsp;CANCEL</a>
+        <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-lg fa-floppy-o"></i> &nbsp;&nbsp;SAVE</button>
+        <!--<a href="#" class="btn btn-sm btn-warning" ng-click="profileCtrl.logout()">Logout</a>-->
+      </div>
+    </div>
+  </fieldset>
+</form>
