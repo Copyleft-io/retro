@@ -29,7 +29,30 @@ app.controller("MemosCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
     // READ - GET A MEMO FROM FIREBASE ON PAGE INIT FOR /memos/edit/:id route
     $scope.getMemo = function() {
       var ref = new Firebase(FIREBASE_URL + 'memos');
+      var memo;
+      //var memoRef = ref.child($stateParams.memoId);
+
       $scope.memo = $firebaseObject(ref.child($stateParams.memoId));
+
+      ref.child($stateParams.memoId).once("value", function(snapshot) {
+        memo = snapshot.val();
+
+        var currentViews = memo.views;
+        var incrementViews = currentViews + 1;
+        var memoRef = ref.child($stateParams.memoId);
+        memoRef.update({
+         views: incrementViews
+        });
+      });
+
+
+      //console.log('memo = ' + $scope.memo);
+      // var memo = ref.child($stateParams.memoId).once("value", function(snapshot) {
+      //   var data = snapshot.exportVal();
+      // });
+      //
+      // console.log(memo);
+      // console.log('ViewCount = ' + memo.views);
       // //console.log('ViewCount = ' + $scope.memo.views);
       // function incrementViewCount() {
       //   var currentViewCount = $scope.memo.views;
@@ -40,7 +63,7 @@ app.controller("MemosCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
       //   return 2;
       // };
       //$scope.memo.views = 2;
-      //$scope.memo.$save();
+      //$scope.update();
     };
 
     // UPDATE - EDIT A MEMO AND SAVE IT TO FIREBASE
