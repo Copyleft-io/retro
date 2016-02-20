@@ -12,8 +12,6 @@
     <span class="btn btn-info">Views: {{question.views || 0}}</span> &nbsp;
     <span ng-click="upVote()" class="btn btn-success">Up Votes: {{question.upvotes.length || 0}}</span> &nbsp;
     <span ng-click="downVote()" class="btn btn-warning">Down Votes: {{question.downvotes.length || 0}}</span>
-    <a ng-if="user.getId() == question.userId" href="#/questions/edit/{{question.$id}}" class="btn btn-xs btn-primary"><i class="fa fa-puzzle-piece"> </i></a>
-    <a ng-if="user.getId() == question.userId" href="" ng-click='delete(question)' class="btn btn-xs btn-warning"><i class="fa fa-trash-o"> </i></a>
   </h4>
   <p>
     {{question.content}}
@@ -21,3 +19,4 @@
 </div>
 <a href="#/questions" class="btn btn-sm btn-default">Back</a>
 <a ng-if="user.getId() == question.userId" href="#/questions/edit/{{question.$id}}" class="btn btn-sm btn-success"><i class="fa fa-pencil-square-o"> Edit</i></a>
+<a ng-if="user.getId() == question.userId" href="" ng-click='delete(question)' class="btn btn-sm btn-warning"><i class="fa fa-trash-o"> Delete</i></a>
