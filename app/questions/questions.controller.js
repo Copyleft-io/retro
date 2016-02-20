@@ -1,13 +1,15 @@
 'use strict';
 
-app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, Questions) {
+app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Questions) {
 
     $scope.questions = Questions();
+    $scope.userId = User.getId();
 
     // add a new question
     $scope.create = function() {
       $scope.questions.$add({
-        name: $scope.question.name
+        user: $scope.question.user  || $scope.userId,
+        question: $scope.question.question
 
       }).then(function() {
         console.log('question Created');
