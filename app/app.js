@@ -89,8 +89,25 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
         url: '/directory/user/{userId}',
         templateUrl: 'directory/view.html',
         controller: 'DirectoryCtrl as directoryCtrl'
-      });
-    $urlRouterProvider.otherwise('/');
+      })
+		  .state('questions', {
+			  url: '/questions',
+			  controller: 'QuestionsCtrl as questionsCtrl',
+			  templateUrl: 'questions/index.html',
+			  resolve: {
+				  questions: function (Questions){
+					  return Questions();
+				  }
+			  }
+		  })
+		  .state('questions/create', {
+			  url: '/questions/create',
+			  templateUrl: 'questions/create.html',
+			  controller: 'QuestionCtrl as questionCtrl'
+		  });
+
+    $urlRouterProvider.otherwise('/')
+
   })
 .constant('FIREBASE_URL', 'https://ss16-retrofire.firebaseio.com/');
 
