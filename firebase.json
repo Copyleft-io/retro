@@ -1,7 +1,6 @@
 {
   "firebase": "ss16-retrofire",
   "public": "dist",
-  "rules": "config/rules.json",
   "ignore": [
     "firebase.json",
     "**/.*",
