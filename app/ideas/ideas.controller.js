@@ -9,7 +9,7 @@ app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
     $scope.create = function() {
         $scope.ideas.$add({
             name: $scope.idea.name,
-            description: $scope.idea.description,
+            content: $scope.idea.content,
             //tags: $scope.idea.tags,
             createdAt: Firebase.ServerValue.TIMESTAMP,
             views: 0,
