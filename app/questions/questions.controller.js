@@ -1,5 +1,16 @@
 'use strict';
 
+var deleteFromArray = function (array, element) {
+  var index = array.indexOf(element);
+
+  while (index !== -1) {
+    array.splice(index, 1);
+    index = array.indexOf(element);
+  }
+};
+
+var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
 app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Users, Questions) {
 
     $scope.questions = Questions();
@@ -14,6 +25,7 @@ app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebase
         userId: $scope.question.userId || User.getId(),
         content: $scope.question.content,
         tags: $scope.question.tags || [ 'tomcat', 'hadoop', 'node.js' ],
+        views: 0,
         createdAt: Firebase.ServerValue.TIMESTAMP
 
       }).then(function() {
@@ -38,25 +50,70 @@ app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebase
     // getQuestion on init for /question/edit/:id route
     $scope.getQuestion = function() {
       var ref = new Firebase(FIREBASE_URL + 'questions');
-      $scope.question = $firebaseObject(ref.child($stateParams.questionId));
-      $scope.question.views.transaction(function (current_value) {
-        return (current_value || 0) + 1;
+      var question = ref.child($stateParams.questionId);
+      $scope.question = $firebaseObject(question);
+      question.child('views').transaction(function (views) {
+        return (views || 0) + 1;
       });
     };
 
     // update a question and save it
-    $scope.update = function() {
+    $scope.update = function(goTo) {
       // save firebaseObject
       $scope.question.updatedAt = Firebase.ServerValue.TIMESTAMP;
       $scope.question.$save().then(function(){
         console.log('question Updated');
-        // redirect to /questions path after update
-        //$location.path('/questions');
-        $state.go('questions');
+
+        if (goTo != null) {
+          $state.go(goTo);
+        }
+
       }).catch(function(error){
         console.log(error);
       });
     };
+
+    $scope.upVote = function(scopeObject) {
+
+      var scopeObject = scopeObject || $scope.question;
+
+      scopeObject.upvotes || (scopeObject.upvotes = []);
+      scopeObject.downvotes || (scopeObject.downvotes = []);
+
+      if (!(indexOf.call(scopeObject.upvotes, User.getId()) >= 0)) {
+        console.log("Casting vote for " + User.getId());
+        scopeObject.upvotes.push(User.getId());
+        deleteFromArray(scopeObject.downvotes, User.getId());
+      } else {
+        console.log("Removing vote");
+        deleteFromArray(scopeObject.upvotes, User.getId());
+      }
+
+      scopeObject.votes = scopeObject.upvotes.length + scopeObject.downvotes.length;
+      $scope.update()
+
+    };
+
+  $scope.downVote = function(scopeObject) {
+
+    var scopeObject = scopeObject || $scope.question;
+
+    scopeObject.upvotes || (scopeObject.upvotes = []);
+    scopeObject.downvotes || (scopeObject.downvotes = []);
+
+    if (!(indexOf.call(scopeObject.downvotes, User.getId()) >= 0)) {
+      console.log("Casting vote for " + User.getId());
+      scopeObject.downvotes.push(User.getId());
+      deleteFromArray(scopeObject.upvotes, User.getId());
+
+    } else {
+      console.log("Removing vote");
+      deleteFromArray(scopeObject.downvotes, User.getId());
+    }
+    scopeObject.votes = scopeObject.upvotes.length + scopeObject.downvotes.length;
+    $scope.update()
+
+  };
 
     // Since the data is asynchronous we'll need to use the $loaded promise.
     // Once data is available we'll set the data variable and init the ngTable
