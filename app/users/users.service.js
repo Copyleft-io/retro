@@ -11,7 +11,7 @@ app.factory('Users', function($firebaseArray, $firebaseObject, FIREBASE_URL){
         return users.$getRecord(uid).email;
       },
       getDisplayName: function(uid){
-        return users.$getRecord(uid).displayName;
+        return (users.$getRecord(uid)) != null ? users.$getRecord(uid).displayName : 'Unknown User';
       },
       getGravatar: function(uid){
         return '//www.gravatar.com/avatar/' + users.$getRecord(uid).emailHash;

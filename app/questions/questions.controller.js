@@ -1,17 +1,19 @@
 'use strict';
 
-app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Questions) {
+app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Users, Questions) {
 
     $scope.questions = Questions();
     $scope.user = User;
+    $scope.users = Users;
 
     // add a new question
     $scope.create = function() {
 
       $scope.questions.$add({
 
-        userId: $scope.question.userId  || User.getId(),
+        userId: $scope.question.userId || User.getId(),
         content: $scope.question.content,
+        tags: $scope.question.tags || [ 'tomcat', 'hadoop', 'node.js' ],
         createdAt: Firebase.ServerValue.TIMESTAMP
 
       }).then(function() {
