@@ -540,6 +540,7 @@ app.controller("QuestionsCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseO
       $scope.questions.$add({
 
         userId: $scope.question.userId || User.getId(),
+        title: $scope.question.title,
         content: $scope.question.content,
         tags: $scope.question.tags || [ 'tomcat', 'hadoop', 'node.js' ],
         views: 0,
@@ -606,7 +607,7 @@ app.controller("QuestionsCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseO
         deleteFromArray(scopeObject.upvotes, User.getId());
       }
 
-      scopeObject.votes = scopeObject.upvotes.length + scopeObject.downvotes.length;
+      scopeObject.votes = scopeObject.upvotes.length - scopeObject.downvotes.length;
       $scope.update()
 
     };
@@ -627,7 +628,7 @@ app.controller("QuestionsCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseO
       console.log("Removing vote");
       deleteFromArray(scopeObject.downvotes, User.getId());
     }
-    scopeObject.votes = scopeObject.upvotes.length + scopeObject.downvotes.length;
+    scopeObject.votes = scopeObject.upvotes.length - scopeObject.downvotes.length;
     $scope.update()
 
   };
@@ -691,10 +692,9 @@ app.controller("IdeasCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObjec
     $scope.create = function() {
         $scope.ideas.$add({
             name: $scope.idea.name,
-            description: $scope.idea.description,
-            comments: ["testing"],
+            content: $scope.idea.content,
             //tags: $scope.idea.tags,
-            createdAt: new Date().toString(),
+            createdAt: Firebase.ServerValue.TIMESTAMP,
             views: 0,
             userId: User.getId()
         }).then(function() {
@@ -747,20 +747,14 @@ app.controller("IdeasCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObjec
     };
 
     $scope.addComment = function() {
-        if($scope.idea.comments[0] === "testing") {
-            $scope.idea.comments = [];
-        }
         var comment = {
             content: $scope.content,
             userId: User.getId(),
-            createdAt: new Date().toString()
+            createdAt: Firebase.ServerValue.TIMESTAMP
         };
-        $scope.idea.comments.push(comment);
-        var ref = new Firebase(FIREBASE_URL + 'ideas');
-        var refChild = ref.child($stateParams.ideaId);
-        refChild.update({
-           comments: $scope.idea.comments
-        });
+        var ref = new Firebase(FIREBASE_URL + 'ideas/' + $stateParams.ideaId);
+        var refChild = ref.child('comments');
+        refChild.push(comment);
         $scope.tableIdeas.reload();
     };
 
