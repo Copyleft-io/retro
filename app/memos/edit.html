@@ -1,0 +1,71 @@
+
+<form class="form-horizontal well" ng-submit="update()" ng-init="getMemo()">
+<fieldset>
+<legend>Edit Memo</legend>
+  <br>
+  <uib-tabset>
+    <uib-tab>
+      <uib-tab-heading> <i class="fa fa-newspaper-o"></i> Memo </uib-tab-heading>
+      <br>
+        <div class="form-group">
+          <label for="inputId" class="col-lg-1 control-label">Id</label>
+          <div class="col-lg-10">
+            <input type="text" class="form-control" id="inputId" placeholder="id" ng-model="memo.$id" readonly>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputTitle" class="col-lg-1 control-label">Title</label>
+          <div class="col-lg-10">
+            <input type="text" class="form-control" id="inputTitle" placeholder="title" ng-model="memo.title" >
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputContent" class="col-lg-1 control-label">Memo</label>
+          <div class="col-lg-10">
+            <div text-angular ng-model="memo.content" ></div>
+          </div>
+        </div>
+        <br>
+      </uib-tab>
+      <uib-tab>
+          <uib-tab-heading> <i class="fa fa-comment"></i> Comments </uib-tab-heading>
+          <br>
+          ID: {{memo.$id}}<br>
+          CreatedAt: {{memo.createdAt}}<br>
+          CreatedBy: {{memo.createdBy}}<br>
+          <br>
+          <hr>
+        <p class="lead">Comments</p>
+        <hr>
+        <div class="row">
+        <div ng-repeat="comment in memoComments">
+          <p><a href="#/directory/user/{{comment.createdById}}">{{comment.createdBy}}</a> | {{comment.createdAt}}</p>
+          <div class="well">
+              <div ta-bind ng-model="comment.content" ></div>
+            </p>
+          </div>
+          <br>
+        </div>
+      </div>
+      <div class="row">
+        <br><hr>
+<p class="lead">New Comment</p>
+              <div class="form-group">
+                <div class="col-lg-10">
+                  <div text-angular ng-model="newMemoComment.content" ></div>
+                </div>
+              </div>
+              <a href="" ng-click='addComment(newMemoComment)' class="btn btn-sm btn-success"><i class="fa fa-plus"> </i> ADD COMMENT</a>
+</div>
+          </uib-tab>
+  </uib-tabset>
+
+  <hr>
+  <div class="form-group">
+    <div class="col-lg-10">
+      <a href="#/memos" class="btn btn-sm btn-default"><i class="fa fa-lg fa-times"></i> &nbsp;CANCEL</a>
+      <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-lg fa-floppy-o"></i> &nbsp;SAVE</button>
+    </div>
+  </div>
+    </fieldset>
+</form>

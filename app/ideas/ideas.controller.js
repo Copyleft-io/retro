@@ -82,4 +82,4 @@ app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
     });
 });
 
-console.log('--> basestation/app/devices/ideas.controller.js loaded');
+console.log('--> retrofire/app/devices/ideas.controller.js loaded');

@@ -1,0 +1,25 @@
+
+<form class="form-horizontal well" ng-submit="create(memo)" >
+  <fieldset>
+    <legend>Create Memo</legend>
+    <div class="form-group">
+      <label for="inputTitle" class="col-lg-1 control-label">Title</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control" id="inputTitle" placeholder="title" ng-model="memo.title" >
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputContent" class="col-lg-1 control-label">Memo</label>
+      <div class="col-lg-10">
+        <div text-angular ng-model="memo.content" ></div>
+      </div>
+    </div>
+    <br>
+    <div class="form-group">
+      <div class="col-lg-10 col-lg-offset-1">
+        <a href="#/memos" type="reset" class="btn btn-sm btn-default"><i class="fa fa-lg fa-times"></i> &nbsp;CANCEL</a>
+        <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-lg fa-floppy-o"></i> &nbsp;SAVE</button>
+      </div>
+    </div>
+  </fieldset>
+</form>

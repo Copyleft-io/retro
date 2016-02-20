@@ -9,4 +9,4 @@ app.factory("Ideas", function IdeaFactory(FIREBASE_URL, $firebaseArray) {
     }
 });
 
-console.log('--> basestation/app/ideas/ideas.service.js loaded');
+console.log('--> retrofire/app/ideas/ideas.service.js loaded');

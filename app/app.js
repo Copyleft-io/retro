@@ -138,8 +138,44 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
           url: '/ideas/create',
           templateUrl: 'ideas/create.html',
           controller: 'IdeasCtrl as ideasCtrl'
+      })
+      .state('memos', {
+        url: '/memos',
+        templateUrl: 'memos/index.html',
+        controller: 'MemosCtrl as memosCtrl',
+        resolve: {
+          requests: function (Memos){
+             return Memos();
+           },
+          auth: function($state, Users, Auth){
+            return Auth.$requireAuth().catch(function(){
+              $state.go('home');
+            });
+          }
+        }
+      })
+      .state('memos/create', {
+        url: '/memos/create',
+        templateUrl: 'memos/create.html',
+        controller: 'MemosCtrl as memosCtrl',
+        resolve: {
+          auth: function($state, Users, Auth){
+            return Auth.$requireAuth().catch(function(){
+              $state.go('home');
+            });
+          }
+        }
+      })
+      .state('memos/view', {
+        url: '/memos/view/{memoId}',
+        templateUrl: 'memos/view.html',
+        controller: 'MemosCtrl as memosCtrl'
+      })
+      .state('memos/edit', {
+        url: '/memos/edit/{memoId}',
+        templateUrl: 'memos/edit.html',
+        controller: 'MemosCtrl as memosCtrl'
       });
-
 
     $urlRouterProvider.otherwise('/')
 

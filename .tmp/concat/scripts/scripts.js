@@ -30,6 +30,20 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
           }]
         }
       })
+      .state('password-reset', {
+        url: '/password-reset',
+        controller: 'AuthCtrl as authCtrl',
+        templateUrl: 'auth/password-reset.html',
+        resolve: {
+          requireNoAuth: ["$state", "Auth", function($state, Auth){
+            return Auth.$requireAuth().then(function(auth){
+              $state.go('dashboard');
+            }, function(error){
+              return;
+            });
+          }]
+        }
+      })
       .state('about', {
         url: '/about',
         templateUrl: 'static/about.html'
@@ -103,8 +117,24 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
 		  .state('questions/create', {
 			  url: '/questions/create',
 			  templateUrl: 'questions/create.html',
-			  controller: 'QuestionCtrl as questionCtrl'
-		  });
+        controller: 'QuestionsCtrl as questionsCtrl'
+      })
+      .state('ideas', {
+          url: '/ideas',
+          controller: 'IdeasCtrl as ideasCtrl',
+          templateUrl: 'ideas/index.html',
+          resolve: {
+              questions: ["Ideas", function (Ideas){
+                  return Ideas();
+              }]
+          }
+      })
+      .state('ideas/create', {
+          url: '/ideas/create',
+          templateUrl: 'ideas/create.html',
+          controller: 'IdeasCtrl as ideasCtrl'
+      });
+
 
     $urlRouterProvider.otherwise('/')
 
@@ -122,7 +152,8 @@ app.factory('Auth', ["$firebaseAuth", "FIREBASE_URL", function($firebaseAuth, FI
 console.log('--> retrofire/app/auth/auth.service.js loaded');
 
 'use strict';
-app.controller('AuthCtrl', ["Auth", "$state", "$scope", "$rootScope", function(Auth, $state, $scope, $rootScope){
+app.controller('AuthCtrl', ["FIREBASE_URL", "Auth", "$state", "$scope", "$rootScope", function(FIREBASE_URL, Auth, $state, $scope, $rootScope){
+    var ref = new Firebase(FIREBASE_URL);
     var authCtrl = this;
 
     authCtrl.user = {
@@ -148,6 +179,18 @@ app.controller('AuthCtrl', ["Auth", "$state", "$scope", "$rootScope", function(A
       }, function (error){
         authCtrl.error = error;
       });
+    };
+
+    authCtrl.resetPassword = function (){
+      ref.resetPassword({
+        email : authCtrl.user.email
+      }, function(error) {
+          if (error === null) {
+            console.log("Password reset email sent successfully");
+          } else {
+            console.log("Error sending password reset email:", error);
+          }
+        });
     };
 
     /* Removing Registration Functionality
@@ -392,14 +435,16 @@ console.log('--> retrofire/app/directory.controller.js loaded');
 
 'use strict';
 
-app.controller("QuestionsCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObject", "$firebaseArray", "$stateParams", "ngTableParams", "$filter", "Questions", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, Questions) {
+app.controller("QuestionsCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObject", "$firebaseArray", "$stateParams", "ngTableParams", "$filter", "User", "Questions", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Questions) {
 
     $scope.questions = Questions();
+    $scope.userId = User.getId();
 
     // add a new question
     $scope.create = function() {
       $scope.questions.$add({
-        name: $scope.question.name
+        user: $scope.question.user  || $scope.userId,
+        question: $scope.question.question
 
       }).then(function() {
         console.log('question Created');
@@ -486,3 +531,101 @@ app.factory("Questions", ["FIREBASE_URL", "$firebaseArray", function QuestionFac
 }]);
 
 console.log('--> questions.service.js loaded');
+
+'use strict';
+
+app.controller("IdeasCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObject", "$firebaseArray", "$stateParams", "ngTableParams", "$filter", "Ideas", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, Ideas) {
+    $scope.ideas = Ideas();
+
+    // add a new idea
+    $scope.create = function() {
+        $scope.ideas.$add({
+            name: $scope.idea.name,
+            description: $scope.idea.description,
+            comments: $scope.idea.comments,
+            tags: $scope.idea.tags,
+            views: $scope.idea.views,
+            userId: $scope.idea.userId
+        }).then(function() {
+            console.log('idea Created');
+            $state.go('ideas');
+
+        }).catch(function(error) {
+            console.log(error);
+        });
+    };
+
+    // remove an idea
+    $scope.delete = function(idea) {
+        $scope.ideas.$remove(idea).then(function(){
+            console.log('idea Deleted');
+        }).catch(function(error){
+            console.log(error);
+        });
+    };
+
+    // getIdea on init for /idea/edit/:id route
+    $scope.getIdea = function() {
+        var ref = new Firebase(FIREBASE_URL + 'ideas');
+        $scope.idea = $firebaseObject(ref.child($stateParams.ideaId));
+        $scope.idea.views = $scope.idea.views++;
+        $scope.update();
+    };
+
+    // update an idea and save it
+    $scope.update = function() {
+        // save firebaseObject
+        $scope.idea.$save().then(function(){
+            console.log('idea Updated');
+            // redirect to /ideas path after update
+            $state.go('ideas');
+        }).catch(function(error){
+            console.log(error);
+        });
+    };
+
+    // Since the data is asynchronous we'll need to use the $loaded promise.
+    // Once data is available we'll set the data variable and init the ngTable
+    $scope.ideas.$loaded().then(function(ideas) {
+        console.log(ideas.length); // data is loaded here
+        var data = ideas;
+
+        $scope.tableDevices = new ngTableParams({
+            page: 1,            // show first page
+            count: 10,          // count per page
+            sorting: { name: 'asc' }    // initial sorting
+        }, {
+            total: data.length, // length of data
+            getData: function($defer, params) {
+                // use build-in angular filter
+                var orderedData = params.sorting() ? $filter('filter')(data, params.filter()) : data;
+                $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+            }
+        });
+
+    });
+
+    // Listening for list updates to Ideas to update Table
+    var ref = new Firebase(FIREBASE_URL + 'ideas');
+    var list = $firebaseArray(ref);
+    list.$watch(function(event) {
+        console.log(event);
+        $scope.ideas.$loaded().then(function(){
+            $scope.tableDevices.reload();
+        });
+    });
+}]);
+
+console.log('--> basestation/app/devices/ideas.controller.js loaded');
+'use strict';
+
+app.factory("Ideas", ["FIREBASE_URL", "$firebaseArray", function IdeaFactory(FIREBASE_URL, $firebaseArray) {
+    return function(){
+        // snapshot of our data
+        var ref = new Firebase(FIREBASE_URL + 'ideas');
+        // returning synchronized array
+        return $firebaseArray(ref);
+    }
+}]);
+
+console.log('--> basestation/app/ideas/ideas.service.js loaded');
