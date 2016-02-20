@@ -1,8 +1,9 @@
 'use strict';
 
-app.controller("MemosCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, Memos, User ) {
+app.controller("MemosCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, Memos, User) {
 
     $scope.memos = Memos();
+    $scope.user = User;
 
     // CORE CRUD FUNCTIONALITY
     // - CREATE ($add firebaseObject to synchronized firebaseArray)
