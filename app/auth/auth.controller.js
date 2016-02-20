@@ -1,5 +1,6 @@
 'use strict';
-app.controller('AuthCtrl', function(Auth, $state, $scope, $rootScope){
+app.controller('AuthCtrl', function(FIREBASE_URL, Auth, $state, $scope, $rootScope){
+    var ref = new Firebase(FIREBASE_URL);
     var authCtrl = this;
 
     authCtrl.user = {
@@ -25,6 +26,18 @@ app.controller('AuthCtrl', function(Auth, $state, $scope, $rootScope){
       }, function (error){
         authCtrl.error = error;
       });
+    };
+
+    authCtrl.resetPassword = function (){
+      ref.resetPassword({
+        email : authCtrl.user.email
+      }, function(error) {
+          if (error === null) {
+            console.log("Password reset email sent successfully");
+          } else {
+            console.log("Error sending password reset email:", error);
+          }
+        });
     };
 
     /* Removing Registration Functionality

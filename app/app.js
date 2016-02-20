@@ -30,6 +30,20 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
           }
         }
       })
+      .state('password-reset', {
+        url: '/password-reset',
+        controller: 'AuthCtrl as authCtrl',
+        templateUrl: 'auth/password-reset.html',
+        resolve: {
+          requireNoAuth: function($state, Auth){
+            return Auth.$requireAuth().then(function(auth){
+              $state.go('dashboard');
+            }, function(error){
+              return;
+            });
+          }
+        }
+      })
       .state('about', {
         url: '/about',
         templateUrl: 'static/about.html'
