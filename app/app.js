@@ -90,7 +90,7 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
         templateUrl: 'directory/view.html',
         controller: 'DirectoryCtrl as directoryCtrl'
       })
-		  .state('questions', {
+        .state('questions', {
 			  url: '/questions',
 			  controller: 'QuestionsCtrl as questionsCtrl',
 			  templateUrl: 'questions/index.html',
@@ -99,12 +99,27 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
 					  return Questions();
 				  }
 			  }
-		  })
-		  .state('questions/create', {
-			  url: '/questions/create',
+        })
+        .state('questions/create', {
+            url: '/questions/create',
 			  templateUrl: 'questions/create.html',
 			  controller: 'QuestionCtrl as questionCtrl'
-		  });
+		  })
+        .state('ideas', {
+            url: '/ideas',
+            controller: 'IdeasCtrl as ideasCtrl',
+            templateUrl: 'ideas/index.html',
+            resolve: {
+                questions: function (Ideas){
+                    return Ideas();
+                }
+            }
+        })
+        .state('ideas/create', {
+            url: '/ideas/create',
+            templateUrl: 'ideas/create.html',
+            controller: 'IdeasCtrl as ideasCtrl'
+        });
 
     $urlRouterProvider.otherwise('/')
 
