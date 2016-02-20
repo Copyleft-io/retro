@@ -1,17 +1,19 @@
 'use strict';
 
-app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, Ideas) {
+app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Users, Ideas) {
     $scope.ideas = Ideas();
+    $scope.user = User;
+    $scope.users = Users;
 
     // add a new idea
     $scope.create = function() {
         $scope.ideas.$add({
             name: $scope.idea.name,
             description: $scope.idea.description,
-            comments: $scope.idea.comments,
-            tags: $scope.idea.tags,
-            views: $scope.idea.views,
-            userId: $scope.idea.userId
+            //tags: $scope.idea.tags,
+            createdAt: new Date().toString(),
+            views: 1,
+            userId: User.getId()
         }).then(function() {
             console.log('idea Created');
             $state.go('ideas');
@@ -34,8 +36,8 @@ app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
     $scope.getIdea = function() {
         var ref = new Firebase(FIREBASE_URL + 'ideas');
         $scope.idea = $firebaseObject(ref.child($stateParams.ideaId));
-        $scope.idea.views = $scope.idea.views++;
-        $scope.update();
+        /*$scope.idea.views = $scope.idea.views++;
+        $scope.update();*/
     };
 
     // update an idea and save it
@@ -50,13 +52,22 @@ app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
         });
     };
 
+    $scope.addComment = function(comment) {
+        if($scope.comments === 'undefined') {
+            $scope.comments = [];
+        }
+        $scope.idea.comments.push(comment);
+        $scope.update();
+        $scope.tableIdeas.reload();
+    }
+
     // Since the data is asynchronous we'll need to use the $loaded promise.
     // Once data is available we'll set the data variable and init the ngTable
     $scope.ideas.$loaded().then(function(ideas) {
         console.log(ideas.length); // data is loaded here
         var data = ideas;
 
-        $scope.tableDevices = new ngTableParams({
+        $scope.tableIdeas = new ngTableParams({
             page: 1,            // show first page
             count: 10,          // count per page
             sorting: { name: 'asc' }    // initial sorting
@@ -77,7 +88,7 @@ app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
     list.$watch(function(event) {
         console.log(event);
         $scope.ideas.$loaded().then(function(){
-            $scope.tableDevices.reload();
+            $scope.tableIdeas.reload();
         });
     });
 });
