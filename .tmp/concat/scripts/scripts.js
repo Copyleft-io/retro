@@ -635,9 +635,10 @@ app.controller("IdeasCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObjec
         $scope.ideas.$add({
             name: $scope.idea.name,
             description: $scope.idea.description,
+            comments: ["testing"],
             //tags: $scope.idea.tags,
             createdAt: new Date().toString(),
-            views: 1,
+            views: 0,
             userId: User.getId()
         }).then(function() {
             console.log('idea Created');
@@ -660,9 +661,20 @@ app.controller("IdeasCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObjec
     // getIdea on init for /idea/edit/:id route
     $scope.getIdea = function() {
         var ref = new Firebase(FIREBASE_URL + 'ideas');
+        var idea;
+
         $scope.idea = $firebaseObject(ref.child($stateParams.ideaId));
-        /*$scope.idea.views = $scope.idea.views++;
-        $scope.update();*/
+
+        ref.child($stateParams.ideaId).once("value", function(snapshot) {
+            idea = snapshot.val();
+
+            var currentViews = idea.views;
+            var incrementViews = currentViews + 1;
+            var ideaRef = ref.child($stateParams.ideaId);
+            ideaRef.update({
+                views: incrementViews
+            });
+        });
     };
 
     // update an idea and save it
@@ -677,14 +689,23 @@ app.controller("IdeasCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObjec
         });
     };
 
-    $scope.addComment = function(comment) {
-        if($scope.comments === 'undefined') {
-            $scope.comments = [];
+    $scope.addComment = function() {
+        if($scope.idea.comments[0] === "testing") {
+            $scope.idea.comments = [];
         }
+        var comment = {
+            content: $scope.content,
+            userId: User.getId(),
+            createdAt: new Date().toString()
+        };
         $scope.idea.comments.push(comment);
-        $scope.update();
+        var ref = new Firebase(FIREBASE_URL + 'ideas');
+        var refChild = ref.child($stateParams.ideaId);
+        refChild.update({
+           comments: $scope.idea.comments
+        });
         $scope.tableIdeas.reload();
-    }
+    };
 
     // Since the data is asynchronous we'll need to use the $loaded promise.
     // Once data is available we'll set the data variable and init the ngTable
@@ -735,7 +756,7 @@ console.log('--> retrofire/app/ideas/ideas.service.js loaded');
 
 'use strict';
 
-app.controller("MemosCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObject", "$firebaseArray", "$stateParams", "ngTableParams", "$filter", "Memos", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, Memos ) {
+app.controller("MemosCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObject", "$firebaseArray", "$stateParams", "ngTableParams", "$filter", "Memos", "User", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, Memos, User ) {
 
     $scope.memos = Memos();
 
@@ -748,6 +769,8 @@ app.controller("MemosCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObjec
     // CREATE - ADD A NEW MEMO TO FIREBASE
     $scope.create = function(memo) {
       memo.createdAt = new Date().toString();
+      memo.createdBy = User.getEmail();
+      memo.createdById = User.getId();
       memo.views = 1;
       $scope.memos.$add(memo).then(function() {
         console.log('[ MemosCtrl ] --> Memo Created');

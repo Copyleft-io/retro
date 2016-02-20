@@ -3,6 +3,15 @@
 <fieldset>
 <legend>Edit Memo</legend>
   <br>
+  <p><strong>By</strong> <a href="#/directory/user/{{memo.createdById}}">{{memo.createdBy}}</a>
+    <br>{{memo.createdAt}}</p>
+
+    <h4>
+      <span class="label label-info">{{memo.views}} &nbsp;VIEWS</span> &nbsp;
+      <span class="label label-warning"> # VOTES</span> &nbsp;
+      <span class="label label-success"> # COMMENTS</span> &nbsp;
+    </h4>
+  <hr>
   <uib-tabset>
     <uib-tab>
       <uib-tab-heading> <i class="fa fa-newspaper-o"></i> Memo </uib-tab-heading>
@@ -43,14 +52,9 @@
       <uib-tab>
           <uib-tab-heading> <i class="fa fa-comment"></i> Comments </uib-tab-heading>
           <br>
-          ID: {{memo.$id}}<br>
-          CreatedAt: {{memo.createdAt}}<br>
-          CreatedBy: {{memo.createdBy}}<br>
-          <br>
-          <hr>
-        <p class="lead">Comments</p>
-        <hr>
         <div class="row">
+          <br><div class="col-lg-offset-1">
+    <p class="lead">Comments</p>
         <div ng-repeat="comment in memoComments">
           <p><a href="#/directory/user/{{comment.createdById}}">{{comment.createdBy}}</a> | {{comment.createdAt}}</p>
           <div class="well">
@@ -60,16 +64,19 @@
           <br>
         </div>
       </div>
+    </div>
       <div class="row">
-        <br><hr>
-<p class="lead">New Comment</p>
+        <br><div class="col-lg-offset-1">
+          <hr>
+  <p class="lead">New Comment</p>
               <div class="form-group">
                 <div class="col-lg-10">
                   <div text-angular ng-model="newMemoComment.content" ></div>
                 </div>
               </div>
               <a href="" ng-click='addComment(newMemoComment)' class="btn btn-sm btn-success"><i class="fa fa-plus"> </i> ADD COMMENT</a>
-</div>
+  </div>
+  </div>
           </uib-tab>
   </uib-tabset>
 
