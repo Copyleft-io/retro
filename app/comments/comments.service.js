@@ -1,6 +1,10 @@
 'use strict';
 
-app.factory('Comments', function(FIREBASE_URL, $firebaseArray, $stateParams, User) {
+var handleSave = function(){
+    console.log('entity saved');
+};
+
+app.factory('Comments', function(FIREBASE_URL, $firebaseArray, $stateParams, User, $firebaseObject) {
 
     var Comments;
     Comments = (function() {
@@ -31,7 +35,7 @@ app.factory('Comments', function(FIREBASE_URL, $firebaseArray, $stateParams, Use
             console.log(commentId);
             var entityChild = this.ref.child(entityId);
 
-            entityChild.child('comments').child(commentId).remove().then(function(){
+            entityChild.child('comments/' + commentId).remove().then(function(){
               console.log('Comment Deleted');
               entityChild.child('commentCount').transaction(function (count) {
                 return (count || 1)  - 1;
@@ -41,28 +45,48 @@ app.factory('Comments', function(FIREBASE_URL, $firebaseArray, $stateParams, Use
             });
         };
 
-        Comments.prototype.upVote = function(id) {
-
-            var comment = this.ref.child(id);
+        Comments.prototype.upVote = function(entityId, commentId) {
+            //TODO: save users to index
+            var entity = this.ref.child(entityId);
+            var comment = entity.child('comments/' + commentId);
 
             comment.upvotes || (comment.upvotes = []);
             comment.downvotes || (comment.downvotes = []);
-
             if (!(indexOf.call(comment.upvotes, User.getId()) >= 0)) {
                 console.log("Casting vote for " + User.getId());
                 comment.upvotes.push(User.getId());
                 deleteFromArray(comment.downvotes, User.getId());
+
             } else {
                 console.log("Removing vote");
                 deleteFromArray(comment.upvotes, User.getId());
             }
 
-            comment.votes = comment.upvotes.length - comment.downvotes.length;
-
+            comment.child('rank').transaction(function (count) {
+                return  comment.upvotes.length - comment.downvotes.length;
+            });
         };
 
-        Comments.prototype.downVote = function(id) {
-            return this.ref.child(id).remove();
+        Comments.prototype.downVote = function(entityId, commentId) {
+
+            var entity = this.ref.child(entityId);
+            var comment = entity.child('comments/' + commentId);
+
+            comment.upvotes || (comment.upvotes = []);
+            comment.downvotes || (comment.downvotes = []);
+            if (!(indexOf.call(comment.downvotes, User.getId()) >= 0)) {
+                console.log("Casting vote for " + User.getId());
+                comment.downvotes.push(User.getId());
+                deleteFromArray(comment.upvotes, User.getId());
+
+            } else {
+                console.log("Removing vote");
+                deleteFromArray(comment.downvotes, User.getId());
+            }
+
+            comment.child('rank').transaction(function (count) {
+                return  comment.upvotes.length - comment.downvotes.length;
+            });
         };
 
         Comments.prototype.editComment = function(entityId, updatedContent) {

@@ -1,6 +1,6 @@
 language: node
 sudo: false
-before_script: npm install -g grunt
+before_script: npm install -g grunt-cli
 script: npm run build
 cache:
   directories:
@@ -8,3 +8,5 @@ cache:
 deploy:
   provider: firebase
   skip_cleanup: true
+  token:
+    secure: LV9ctYXro3KdfGMwLBEoFjFxsFEvJsHqum4NYt1SBpaUhBdFgYM5VvZtVv9QPTIxKXqGZDTiyI59foS/+xa95Siu+kV6eTnTRC11UCY9i4odRnR/sRCEw1+E3BW8CbtJ4o+YgCzUFgORZ/CIUQwKwLOAICjQnV4IzRQJQb8TXq3eXwOsWttv47Ghae/98lTT6Sd1q/PuxNLxg+ayCxMgfCb5/PMPSvnOWQ49Nz5NSWq37/KYQ4+p1VkKr/MMmuRPyG0Hb9eTbdYDBZo5BRYgR5pSyTofaozBz/XPoC6/vD6zzDe/tC9FsVJSj9HV8XlLt+J90YA1MadT+0Mv1fXronDZCTPIaBot68/TA3UAVZBoD/+tJwkIHBgMVoTI8mCGcy9z/7uWpCrL4qY2MNrsoSngftnQRTzXm865+6KMyrFM+QU3ev0qFjtz4eBTTmLJHzRyjDkvLzsTItXP4AUoh161QhIyhL5qO3dhokyKqaHJ6mjlVIARS+MKNWLvRyfj+62b9cNOFGg8tADK7m5Ne9CGTmq96NC2EorFefW0Un+LFnRbEiw8ezPQNOXMQZCp6tVaOaeFJgB5W+U/hNQ3x7RZ6XsNVrMY87/GFx2tJtHlGE1Ft3ZFwPHlm98XC+1Fu2xsCy7w96SVjzrxEde1L/F1PV1DtwKNd/XFYH8plas=
