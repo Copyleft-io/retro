@@ -31,7 +31,7 @@ app.controller("MemosCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
           memoTagsArray.push(tag.text);
         });
 
-        // Elastic Search Client
+        // Elastic Search Client Create A New Index
         esClient.create({
           index: 'memos',
           type: 'memo',
@@ -100,9 +100,36 @@ app.controller("MemosCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
     // UPDATE - EDIT A MEMO AND SAVE IT TO FIREBASE
     $scope.update = function() {
       // save firebaseObject
-      $scope.memo.$save().then(function(){
+      $scope.memo.$save().then(function(newMemo){
         console.log('[ MemosCtrl ] --> Memo Updated');
+        console.log('[ MemosCtrl ] --> Memo Created');
+        var refId = newMemo.key();
+        var memoObject = $scope.memos.$getRecord(newMemo.key());
+        var memoObjectTags = memoObject.tags;
+        var memoTagsArray = [];
+        memoObjectTags.forEach(function (tag) {
+          memoTagsArray.push(tag.text);
+        });
 
+        // Elastic Search Client Create A New Index
+        esClient.update({
+          index: 'memos',
+          type: 'memo',
+          id: refId,
+          body: {
+            doc: {
+              title: memoObject.title,
+              content: memoObject.content,
+              tags: memoTagsArray,
+              createdAt: memoObject.createdAt,
+              createdBy: memoObject.createdBy,
+              createdById: memoObject.createdById
+            }
+          }
+        }, function (error, response) {
+            console.log(error);
+            console.log(response);
+        });
         // redirect to /memos path after update
         $state.go('memos');
       }).catch(function(error){
@@ -112,9 +139,16 @@ app.controller("MemosCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
 
     // DELETE - REMOVE A MEMO FROM FIREBASE
     $scope.delete = function(memo) {
-        $scope.memos.$remove(memo).then(function(){
+        $scope.memos.$remove(memo).then(function(deletedMemo){
             console.log('[ MemosCtrl ] --> Memo Deleted');
-
+            var refId = deletedMemo.key();
+            esClient.delete({
+                index: 'memos',
+                type: 'memo',
+                id: refId
+              }, function (error, response) {
+                // ...
+              });
             // redirect to /memos path after delete
             $state.go('memos');
         }).catch(function(error){

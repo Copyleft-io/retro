@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','ui.router', 'ngTable', 'ngTagsInput', 'textAngular'])
+var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','ui.router', 'ngTable', 'ngTagsInput', 'textAngular', 'elasticsearch'])
   .config(["$stateProvider", "$urlRouterProvider", function ($stateProvider, $urlRouterProvider) {
     $stateProvider
       .state('home', {
@@ -216,6 +216,11 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
         url: '/memos/edit/{memoId}',
         templateUrl: 'memos/edit.html',
         controller: 'MemosCtrl as memosCtrl'
+      })
+      .state('elastic', {
+        url: '/elastic',
+        controller: 'ElasticCtrl as elasticCtrl',
+        templateUrl: 'elasticsearch/index.html'
       });
 
     $urlRouterProvider.otherwise('/')
@@ -461,6 +466,50 @@ console.log('--> retrofire/app/navbar/navbar.controller.js loaded');
 
 'use strict';
 
+app.service("esClient", ["esFactory", function (esFactory) {
+  return esFactory({
+    host: 'http://80edaedca1e8ae1c1dc2521c374443e1.us-east-1.aws.found.io:9200'
+  });
+}]);
+
+console.log('--> retrofire/app/elasticsearch/elastic.service.js loaded');
+
+'use strict';
+
+app.controller("ElasticCtrl", ["$scope", "esClient", function($scope, esClient) {
+
+  esClient.cluster.state({
+      metric: [
+        'cluster_name',
+        'nodes',
+        'master_node',
+        'version'
+      ]
+    })
+    .then(function (resp) {
+      console.log('Cluster State ' + resp);
+      $scope.clusterState = resp;
+      $scope.error = null;
+    })
+    .catch(function (err) {
+      $scope.clusterState = null;
+      $scope.error = err;
+
+      // if the err is a NoConnections error, then the client was not able to
+      // connect to elasticsearch. In that case, create a more detailed error
+      // message
+      if (err instanceof Elastic.errors.NoConnections) {
+        $scope.error = new Error('Unable to connect to elasticsearch. ' +
+          'Make sure that it is running and listening at http://localhost:9200');
+      }
+    });
+
+}]);
+
+console.log('--> retrofire/app/elasticsearch/elastic.controller.js loaded');
+
+'use strict';
+
 app.controller('DashboardCtrl', ["$state", "md5", "auth", function($state, md5, auth){
     var DashboardCtrl = this;
 
@@ -533,6 +582,7 @@ app.controller("QuestionsCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseO
     $scope.questions = Questions();
     $scope.user = User;
     $scope.users = Users;
+    var ref = new Firebase(FIREBASE_URL + 'questions');
 
     // add a new question
     $scope.create = function() {
@@ -542,11 +592,12 @@ app.controller("QuestionsCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseO
         userId: $scope.question.userId || User.getId(),
         title: $scope.question.title,
         content: $scope.question.content,
-        tags: $scope.question.tags || [ 'tomcat', 'hadoop', 'node.js' ],
+        tags: $scope.question.tags,
         views: 0,
         createdAt: Firebase.ServerValue.TIMESTAMP
 
       }).then(function() {
+
         console.log('question Created');
 
         $state.go('questions');
@@ -567,7 +618,6 @@ app.controller("QuestionsCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseO
 
     // getQuestion on init for /question/edit/:id route
     $scope.getQuestion = function() {
-      var ref = new Firebase(FIREBASE_URL + 'questions');
       var question = ref.child($stateParams.questionId);
       $scope.question = $firebaseObject(question);
       question.child('views').transaction(function (views) {
@@ -586,6 +636,41 @@ app.controller("QuestionsCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseO
           $state.go(goTo);
         }
 
+      }).catch(function(error){
+        console.log(error);
+      });
+    };
+
+    $scope.addAnswer = function() {
+      var comment = {
+        content: $scope.answerContent,
+        userId: User.getId(),
+        createdAt: Firebase.ServerValue.TIMESTAMP
+      };
+      var question = ref.child($stateParams.questionId);
+
+      var answers = question.child('answers');
+
+      answers.push(comment);
+
+      answers.once("value", function(snapshot) {
+
+        question.update({
+          answerCount: snapshot.numChildren()
+        });
+      });
+
+    };
+
+    $scope.deleteAnswer = function(answer) {
+      var question = ref.child($stateParams.questionId);
+      var answers = question.child('answers');
+      console.log(answer);
+      answers.child(answer).remove().then(function(){
+        console.log('answer Deleted');
+        question.update({
+          answerCount: question.answerCount - 1
+        });
       }).catch(function(error){
         console.log(error);
       });
@@ -655,7 +740,6 @@ app.controller("QuestionsCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseO
     });
 
     // Listening for list updates to questions to update Table
-    var ref = new Firebase(FIREBASE_URL + 'questions');
     var list = $firebaseArray(ref);
     list.$watch(function(event) {
       console.log(event);
@@ -683,21 +767,19 @@ console.log('--> questions.service.js loaded');
 
 'use strict';
 
-app.controller("IdeasCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObject", "$firebaseArray", "$stateParams", "ngTableParams", "$filter", "User", "Users", "Ideas", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Users, Ideas) {
+app.controller("IdeasCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObject", "$firebaseArray", "$stateParams", "ngTableParams", "$filter", "User", "Users", "Comments", "Ideas", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Users, Comments, Ideas) {
     $scope.ideas = Ideas();
+    $scope.comments = new Comments("ideas");
+    console.log("Comments: " + $scope.comments);
     $scope.user = User;
     $scope.users = Users;
 
     // add a new idea
-    $scope.create = function() {
-        $scope.ideas.$add({
-            name: $scope.idea.name,
-            content: $scope.idea.content,
-            //tags: $scope.idea.tags,
-            createdAt: Firebase.ServerValue.TIMESTAMP,
-            views: 0,
-            userId: User.getId()
-        }).then(function() {
+    $scope.create = function(idea) {
+        idea.createdAt = Firebase.ServerValue.TIMESTAMP;
+        idea.userId = User.getId();
+        idea.views = 0;
+        $scope.ideas.$add(idea).then(function() {
             console.log('idea Created');
             $state.go('ideas');
 
@@ -735,27 +817,66 @@ app.controller("IdeasCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObjec
     };
 
     // update an idea and save it
-    $scope.update = function() {
+    $scope.update = function(goTo) {
         // save firebaseObject
+        $scope.idea.updatedAt = Firebase.ServerValue.TIMESTAMP;
         $scope.idea.$save().then(function(){
             console.log('idea Updated');
-            // redirect to /ideas path after update
-            $state.go('ideas');
+
+            if (goTo != null) {
+                $state.go(goTo);
+            }
+
         }).catch(function(error){
             console.log(error);
         });
     };
 
-    $scope.addComment = function() {
-        var comment = {
-            content: $scope.content,
-            userId: User.getId(),
-            createdAt: Firebase.ServerValue.TIMESTAMP
-        };
-        var ref = new Firebase(FIREBASE_URL + 'ideas/' + $stateParams.ideaId);
-        var refChild = ref.child('comments');
-        refChild.push(comment);
-        $scope.tableIdeas.reload();
+    $scope.addComment = function(newContent) {
+        $scope.comments.postComment(newContent);
+
+        $scope.newContent = "";
+    };
+
+    $scope.upVote = function(scopeObject) {
+
+        var scopeObject = scopeObject || $scope.idea;
+
+        scopeObject.upvotes || (scopeObject.upvotes = []);
+        scopeObject.downvotes || (scopeObject.downvotes = []);
+
+        if (!(indexOf.call(scopeObject.upvotes, User.getId()) >= 0)) {
+            console.log("Casting vote for " + User.getId());
+            scopeObject.upvotes.push(User.getId());
+            deleteFromArray(scopeObject.downvotes, User.getId());
+        } else {
+            console.log("Removing vote");
+            deleteFromArray(scopeObject.upvotes, User.getId());
+        }
+
+        scopeObject.votes = scopeObject.upvotes.length - scopeObject.downvotes.length;
+        $scope.update();
+    };
+
+    $scope.downVote = function(scopeObject) {
+
+        var scopeObject = scopeObject || $scope.idea;
+
+        scopeObject.upvotes || (scopeObject.upvotes = []);
+        scopeObject.downvotes || (scopeObject.downvotes = []);
+
+        if (!(indexOf.call(scopeObject.downvotes, User.getId()) >= 0)) {
+            console.log("Casting vote for " + User.getId());
+            scopeObject.downvotes.push(User.getId());
+            deleteFromArray(scopeObject.upvotes, User.getId());
+
+        } else {
+            console.log("Removing vote");
+            deleteFromArray(scopeObject.downvotes, User.getId());
+        }
+        scopeObject.votes = scopeObject.upvotes.length - scopeObject.downvotes.length;
+        $scope.update();
+
     };
 
     // Since the data is asynchronous we'll need to use the $loaded promise.
@@ -807,7 +928,7 @@ console.log('--> retrofire/app/ideas/ideas.service.js loaded');
 
 'use strict';
 
-app.controller("MemosCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObject", "$firebaseArray", "$stateParams", "ngTableParams", "$filter", "Memos", "User", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, Memos, User) {
+app.controller("MemosCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObject", "$firebaseArray", "$stateParams", "ngTableParams", "$filter", "Memos", "User", "esClient", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, Memos, User, esClient) {
 
     $scope.memos = Memos();
     $scope.user = User;
@@ -820,13 +941,41 @@ app.controller("MemosCtrl", ["$state", "$scope", "FIREBASE_URL", "$firebaseObjec
 
     // CREATE - ADD A NEW MEMO TO FIREBASE
     $scope.create = function(memo) {
-      memo.createdAt = new Date().toString();
+      // Set Default Attributes on Create
+      //memo.createdAt = new Date().toString();
+      memo.createdAt = Firebase.ServerValue.TIMESTAMP;
       memo.createdBy = User.getEmail();
       memo.createdById = User.getId();
       memo.views = 1;
-      $scope.memos.$add(memo).then(function() {
-        console.log('[ MemosCtrl ] --> Memo Created');
 
+      // Add New Memo to synchronized firebaseArray
+      $scope.memos.$add(memo).then(function(newMemo) {
+        console.log('[ MemosCtrl ] --> Memo Created');
+        var refId = newMemo.key();
+        var memoObject = $scope.memos.$getRecord(newMemo.key());
+        var memoObjectTags = memoObject.tags;
+        var memoTagsArray = [];
+        memoObjectTags.forEach(function (tag) {
+          memoTagsArray.push(tag.text);
+        });
+
+        // Elastic Search Client
+        esClient.create({
+          index: 'memos',
+          type: 'memo',
+          id: refId,
+          body: {
+            title: memoObject.title,
+            content: memoObject.content,
+            tags: memoTagsArray,
+            createdAt: memoObject.createdAt,
+            createdBy: memoObject.createdBy,
+            createdById: memoObject.createdById
+          }
+        }, function (error, response) {
+            console.log(error);
+            console.log(response);
+        });
         //$location.path('/memos');
         $state.go('memos');
 
@@ -955,3 +1104,37 @@ app.factory("Memos", ["FIREBASE_URL", "$firebaseArray", function MemosFactory(FI
 }]);
 
 console.log('--> retrofire/app/memos/memos.service.js loaded');
+
+'use strict';
+
+app.factory('Comments', ["FIREBASE_URL", "$firebaseArray", "$stateParams", "User", function(FIREBASE_URL, $firebaseArray, $stateParams, User) {
+
+    var Comments;
+    Comments = (function() {
+        function Comments(entity) {
+            this.entity = entity;
+            this.ref = new Firebase(FIREBASE_URL + this.entity + "/comments");
+        }
+
+        Comments.prototype.postComment = function(newContent) {
+            var comment = {
+                content: newContent,
+                userId: User.getId(),
+                createdAt: Firebase.ServerValue.TIMESTAMP
+            };
+            var ref = new Firebase(FIREBASE_URL + 'ideas/' + $stateParams.ideaId);
+            var refChild = ref.child('comments');
+            refChild.push(comment);
+        };
+
+        Comments.prototype.deleteComment = function(id) {
+            return this.ref.child(id).remove();
+        };
+
+        return Comments;
+
+    })();
+    return Comments;
+}]);
+
+console.log('--> retrofire/app/comments/comments.service.js loaded');
