@@ -42,7 +42,7 @@ app.controller('AuthCtrl', function(FIREBASE_URL, Auth, $state, $scope, $rootSco
 
     /* Removing Registration Functionality
     Email Logins should be managed by an admin interface
-    This can be done via Firebase Forge in the meantime
+    This can be done via Firebase Forge in the meantime*/
 
     authCtrl.register = function (){
       Auth.$createUser(authCtrl.user).then(function (user){
@@ -51,8 +51,6 @@ app.controller('AuthCtrl', function(FIREBASE_URL, Auth, $state, $scope, $rootSco
         authCtrl.error = error;
       });
     };
-    */
-
 
 
   });

@@ -12,8 +12,7 @@
     <span>{{ authCtrl.error.message }}</span>
   </div>
 
-
-  <form class="form-inline text-center" ng-submit="authCtrl.login()">
+  <form class="form-inline text-center" ng-submit="authCtrl.register()">
     <div class="input-group">
       <input type="email" class="form-control" placeholder="Email" ng-model="authCtrl.user.email">
     </div>
@@ -22,11 +21,9 @@
       <input type="password" class="form-control" placeholder="Password" ng-model="authCtrl.user.password">
     </div>
     &nbsp;&nbsp;
-    <button type="submit" class="btn btn-success" >Login</button>
-    <br><br><br><a href="#/register">Sign Up!</a> &nbsp;| &nbsp;<a href="#/password-reset">Reset Password</a>
+    <button type="submit" class="btn btn-success" >Register</button>
+    <br><br><br><a href="#/login">Login</a>&nbsp;| &nbsp;<a href="#/password-reset">Reset Password</a>
   </form>
-
-  <!--<a ng-click="authCtrl.google()" class="btn btn-default">Google Auth</a>-->
 
   <hr>
 
