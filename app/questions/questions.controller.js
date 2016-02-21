@@ -76,41 +76,6 @@ app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebase
       });
     };
 
-    $scope.addAnswer = function() {
-      var comment = {
-        content: $scope.answerContent,
-        userId: User.getId(),
-        createdAt: Firebase.ServerValue.TIMESTAMP
-      };
-      var question = ref.child($stateParams.questionId);
-
-      var answers = question.child('answers');
-
-      answers.push(comment);
-
-      answers.once("value", function(snapshot) {
-
-        question.update({
-          answerCount: snapshot.numChildren()
-        });
-      });
-
-    };
-
-    $scope.deleteAnswer = function(answer) {
-      var question = ref.child($stateParams.questionId);
-      var answers = question.child('answers');
-      console.log(answer);
-      answers.child(answer).remove().then(function(){
-        console.log('answer Deleted');
-        question.update({
-          answerCount: question.answerCount - 1
-        });
-      }).catch(function(error){
-        console.log(error);
-      });
-    };
-
     $scope.upVote = function(scopeObject) {
 
       var scopeObject = scopeObject || $scope.question;
