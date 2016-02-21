@@ -1,5 +1,5 @@
 
-<div ng-controller="DashboardCtrl" eui-index="'memos'"><!-- ACTION: change to index name -->
+<div ng-controller="DashboardCtrl" eui-index="'retrofire'"><!-- ACTION: change to index name -->
 <h2><i class="fa fa-lg fa-dashboard"></i> &nbsp;Dashboard</h2><br>
 
   <div class="row">
@@ -109,7 +109,7 @@
            </div>
            <div class="col-lg-2">
                <span class="lead"> Filter by Type</span>
-               <eui-singleselect field="'tags'" size="5">
+               <eui-singleselect field="'_type'" size="5">
                </eui-singleselect>
            </div>
          </div>
@@ -125,7 +125,7 @@
                        {{doc._source._id}} | {{doc._source.title}} | <br>
                        {{doc._source | json | limitTo: 500}} <!-- OPTIONAL: display more meaningful data instead of json -->
                      </td>
-                     <td>{{doc._source.title}} </td>
+                     <td><a ng-href="https://ss16-retrofire.firebaseapp.com/{{doc._source._type}}s/{{doc._source.firebaseId}}"> View</a> </td>
                      <td>{{doc._source.title}} </td>
                    </tr>
 

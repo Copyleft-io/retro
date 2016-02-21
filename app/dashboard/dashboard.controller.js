@@ -24,7 +24,7 @@ app.controller('DashboardCtrl', function($state, $scope, esClient, esFactory){
        $scope.totalIdeas = response.count;
        // ...
       });
-      
+
     //Elastic Search Query For Count of Type: Memo
     var memoCount = esClient.count({
       type: 'memo'
@@ -33,10 +33,6 @@ app.controller('DashboardCtrl', function($state, $scope, esClient, esFactory){
        $scope.totalMemos = response.count;
        // ...
       });
-
-
-
-
 
 
     console.log('TEST = ' + memoCount);

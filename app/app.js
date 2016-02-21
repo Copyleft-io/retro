@@ -145,7 +145,7 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
           resolve: { auth: requireAuth }
         })
         .state('ideas/view', {
-          url: '/ideas/view/{ideaId}',
+          url: '/ideas/{ideaId}',
           templateUrl: 'ideas/view.html',
           controller: 'IdeasCtrl as ideasCtrl',
           resolve: { auth: requireAuth }
@@ -168,7 +168,7 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
         resolve: { auth: requireAuth }
       })
       .state('memos/view', {
-        url: '/memos/view/{memoId}',
+        url: '/memos/{memoId}',
         templateUrl: 'memos/view.html',
         controller: 'MemosCtrl as memosCtrl',
         resolve: { auth: requireAuth }
