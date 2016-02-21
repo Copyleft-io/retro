@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','ui.router', 'ngTable', 'ngTagsInput', 'textAngular','elasticui'])
+var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','ui.router', 'ngTable', 'ngTagsInput', 'textAngular','elasticui', 'elasticsearch'])
   .config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
       .state('home', {

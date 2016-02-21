@@ -2,7 +2,7 @@
 
 app.service("esClient", function (esFactory) {
   return esFactory({
-    host: 'http://80edaedca1e8ae1c1dc2521c374443e1.us-east-1.aws.found.io:9200'
+    host: 'https://80edaedca1e8ae1c1dc2521c374443e1.us-east-1.aws.found.io:9243'
   });
 });
 
