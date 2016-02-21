@@ -48,12 +48,16 @@ app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
     };
 
     // update an idea and save it
-    $scope.update = function() {
+    $scope.update = function(goTo) {
         // save firebaseObject
+        $scope.idea.updatedAt = Firebase.ServerValue.TIMESTAMP;
         $scope.idea.$save().then(function(){
             console.log('idea Updated');
-            // redirect to /ideas path after update
-            $state.go('ideas');
+
+            if (goTo != null) {
+                $state.go(goTo);
+            }
+
         }).catch(function(error){
             console.log(error);
         });
@@ -68,8 +72,48 @@ app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
         var ref = new Firebase(FIREBASE_URL + 'ideas/' + $stateParams.ideaId);
         var refChild = ref.child('comments');
         refChild.push(comment);
-        $scope.tableIdeas.reload();
         $scope.newContent = "";
+    };
+
+    $scope.upVote = function(scopeObject) {
+
+        var scopeObject = scopeObject || $scope.idea;
+
+        scopeObject.upvotes || (scopeObject.upvotes = []);
+        scopeObject.downvotes || (scopeObject.downvotes = []);
+
+        if (!(indexOf.call(scopeObject.upvotes, User.getId()) >= 0)) {
+            console.log("Casting vote for " + User.getId());
+            scopeObject.upvotes.push(User.getId());
+            deleteFromArray(scopeObject.downvotes, User.getId());
+        } else {
+            console.log("Removing vote");
+            deleteFromArray(scopeObject.upvotes, User.getId());
+        }
+
+        scopeObject.votes = scopeObject.upvotes.length - scopeObject.downvotes.length;
+        $scope.update();
+    };
+
+    $scope.downVote = function(scopeObject) {
+
+        var scopeObject = scopeObject || $scope.idea;
+
+        scopeObject.upvotes || (scopeObject.upvotes = []);
+        scopeObject.downvotes || (scopeObject.downvotes = []);
+
+        if (!(indexOf.call(scopeObject.downvotes, User.getId()) >= 0)) {
+            console.log("Casting vote for " + User.getId());
+            scopeObject.downvotes.push(User.getId());
+            deleteFromArray(scopeObject.upvotes, User.getId());
+
+        } else {
+            console.log("Removing vote");
+            deleteFromArray(scopeObject.downvotes, User.getId());
+        }
+        scopeObject.votes = scopeObject.upvotes.length - scopeObject.downvotes.length;
+        $scope.update();
+
     };
 
     // Since the data is asynchronous we'll need to use the $loaded promise.

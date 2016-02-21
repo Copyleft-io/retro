@@ -7,8 +7,8 @@
 
   <h4>
     <span class="label label-info">{{idea.views}} &nbsp;VIEWS</span> &nbsp;
-    <span class="label label-warning"> # VOTES</span> &nbsp;
-    <span class="label label-success"> # COMMENTS</span> &nbsp;
+    <span ng-click="upVote()" class="btn btn-success">Up Votes: {{idea.upvotes.length || 0}}</span> &nbsp;
+    <span ng-click="downVote()" class="btn btn-warning">Down Votes: {{idea.downvotes.length || 0}}</span>
   </h4>
   <hr>
   <div class="form-group">
