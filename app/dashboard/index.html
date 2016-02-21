@@ -2,28 +2,26 @@
 <div ng-controller="DashboardCtrl" eui-index="'memos'"><!-- ACTION: change to index name -->
 
    <div class="container-fluid">
-
+       <h2><i class="fa fa-lg fa-search"></i> &nbsp;Search</h2>
+       <hr><br>
        <div class="row">
-           <div class="col-lg-2 sidebar">
-               <h4>Search by Tag</h4>
-               <eui-searchbox field="'tags'"></eui-searchbox> <!-- ACTION: change to field to search on -->
-               <h4>Search by Title</h4>
-               <eui-searchbox field="'title'"></eui-searchbox>
-               <h4>Filter by Type</h4>
-               <eui-singleselect field="'tags'" size="5">
-               </eui-singleselect> <!-- ACTION: change to field to use as facet -->
-               <!--<h3>Multi select facet</h3>
-               <eui-checklist field="'CHANGE_TO_FIELD'" size="10"></eui-checklist>--> <!-- ACTION: change to field to use as facet -->
-
-               <h3>Results Per Page</h3>
+           <div class="col-lg-3 col-lg-offset-1">
+               <span class="lead"> Search by Tag</span>&nbsp; <eui-searchbox field="'tags'"></eui-searchbox> <br><br><!-- ACTION: change to field to search on -->
+               <span class="lead"> Search by Title</span>&nbsp; <eui-searchbox field="'title'"></eui-searchbox><br><br>
+               <span class="lead">Results Per Page</span>&nbsp;
                <select ng-model="indexVM.pageSize">
                    <option ng-repeat="item in [10, 20, 50, 100]">{{item}}</option>
                </select>
            </div>
+           <div class="col-lg-2">
+               <span class="lead"> Filter by Type</span>
+               <eui-singleselect field="'tags'" size="5">
+               </eui-singleselect>
+           </div>
          </div>
-         <br>
+         <br><hr>
          <div class="row">
-           <div class="col-lg-10 col-lg-offset-2">
+           <div class="col-lg-10 col-lg-offset-1">
 
                <h1>Results</h1>
                <table class="table">
