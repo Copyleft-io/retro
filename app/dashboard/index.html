@@ -119,14 +119,16 @@
 
                <h1>Results</h1>
                <table class="table">
-
+                   <thead>
+                     <td class="lead">Type</td>
+                     <td class="lead">Title</td>
+                     <td class="lead">Id</td>
+                   </thead>
                    <tr ng-repeat="doc in indexVM.results.hits.hits">
-                      <td>
-                       {{doc._source._id}} | {{doc._source.title}} | <br>
-                       {{doc._source | json | limitTo: 500}} <!-- OPTIONAL: display more meaningful data instead of json -->
-                     </td>
-                     <td><a ng-href="https://ss16-retrofire.firebaseapp.com/{{doc._source._type}}s/{{doc._source.firebaseId}}"> View</a> </td>
-                     <td>{{doc._source.title}} </td>
+
+                     <td>{{doc._type}} </td>
+                     <td><a href="#/{{doc._type}}s/{{doc._source.firebaseId}}"> {{doc._source.title}} </a> </td>
+                     <td>{{doc._source.firebaseId}}</td>
                    </tr>
 
              </table>
