@@ -11,12 +11,14 @@ var deleteFromArray = function (array, element) {
 
 var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Users, Comments, Questions) {
+app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Users, Vote, Comments, Questions) {
 
     $scope.questions = Questions();
     $scope.user = User;
     $scope.users = Users;
     $scope.comments = new Comments('questions');
+    $scope.vote = new Vote('questions');
+
     var ref = new Firebase(FIREBASE_URL + 'questions');
 
     // add a new question
