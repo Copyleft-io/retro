@@ -12,7 +12,8 @@
   "repository": {},
   "scripts" : {
     "build": "grunt build",
-    "start": "grunt serve"
+    "start": "grunt serve",
+    "deploy": "grunt deploy"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
