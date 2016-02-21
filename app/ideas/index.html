@@ -1,27 +1,69 @@
 <h3><i class="fa fa-server"></i> &nbsp; Ideas</h3>
 
-<br/>
-<button ng-click="tableIdeas.filter({})" class="btn btn-sm pull-right" style="padding:10px;">Clear Filter</button>
-    <table ng-table="tableIdeas" class="table table-striped table-bordered" show-filter="true">
+<table ng-table="tableIdeas" class="table " show-filter="false">
 
-        <tr ng-repeat="idea in $data">
-            <td data-title="'Name'" class="align-left" filter="{ 'name': 'text' }">
-                {{idea.name}}
-            </td>
-            <td data-title="'Description'" class="align-left" filter="{ 'description': 'text' }">
-                {{idea.description}}
-            </td>
-            <td data-title="'Views'" class="align-left" filter="{ 'views': 'text' }">
-                {{idea.views}}
-            </td>
-            <td>
-              <a href="#/ideas/view/{{idea.$id}}" class="btn btn-xs btn-default"><i class="fa fa-search"> </i></a>
-              <a ng-if="user.getId() == idea.userId" href="#/ideas/edit/{{idea.$id}}" class="btn btn-xs btn-success"><i class="fa fa-pencil-square-o"> </i></a>
-                <a ng-if="user.getId() == idea.userId" href="" ng-click='delete(idea)' class="btn btn-xs btn-warning"><i class="fa fa-trash-o"> </i></a>
-            </td>
-        </tr>
+    <tr ng-repeat="idea in $data">
 
-    </table>
+        <td>
+
+            <div id="result_block">
+                <div id="DIV_2">
+                    <div id="DIV_3">
+                        <div id="DIV_4">
+                            <span id="SPAN_5">{{idea.votes || 0}}</span>
+                        </div>
+                        <div id="DIV_6">
+                            votes
+                        </div>
+                    </div>
+                    <div id="DIV_7">
+                        <div id="DIV_8">
+                            <span id="SPAN_9">{{idea.comments.size || 0}}</span>
+                        </div>
+                        <div id="DIV_10">
+                            comments
+                        </div>
+                    </div>
+                    <div id="DIV_11">
+                        <div id="DIV_12">
+                            <span id="SPAN_13">{{idea.views}}</span>
+                        </div>
+                        <div id="DIV_14">
+                            views
+                        </div>
+                    </div>
+                </div>
+                <div id="DIV_15">
+                    <h3 id="H3_16">
+
+                        <a ng-if="user.getId() == idea.userId" href="#/ideas/edit/{{idea.$id}}" class="btn btn-xs btn-primary"><i class="fa fa-puzzle-piece"> </i></a>
+                        <a ng-if="user.getId() == idea.userId" href="" ng-click='delete(idea)' class="btn btn-xs btn-warning"><i class="fa fa-trash-o"> </i></a>
+                        <a href="#/ideas/view/{{idea.$id}}" title="View Idea - {{idea.title}}" id="A_17">{{idea.title}}</a>
+
+                    </h3>
+                    <div id="DIV_18">
+          <span ng-repeat="(id, tag) in idea.tags">
+            <a href="/ideas/tagged/{{tag.text}}" title="show questions tagged '{{tag.text}}'" rel="tag" id="A_19">{{tag.text}}</a>
+          </span>
+
+                    </div>
+                    <div id="DIV_21">
+                        <span id="SPAN_23">{{idea.createdAt | date:'yyyy-MM-dd HH:mm'}}</span></a> <a href="#/directory/user/{{idea.userId}}" id="A_24">{{users.getDisplayName(idea.userId)}}</a>
+                    </div>
+                </div>
+            </div>
+
+
+        </td>
+
+
+    </tr>
+
+</table>
+
+
+<div class="row">
+
     <a href="#/ideas/create" class="btn btn-sm btn-primary pull-left" style="padding:10px;"><i class="fa fa-lg fa-plus"></i> &nbsp;Start an Idea</a>
 
 </div>

@@ -1,119 +1,52 @@
 
-<form class="form-horizontal well" ng-submit="update()" ng-init="getDevice()">
+<form class="form-horizontal well" ng-submit="update('ideas')" ng-init="getIdea()">
   <fieldset>
-    <legend>Edit Device</legend>
+    <legend>Edit Idea</legend>
+    <br>
+    <p><strong>By</strong> <a href="#/directory/user/{{idea.createdById}}">{{users.getDisplayName(idea.userId)}}</a>
+      <br>{{idea.createdAt | date:'yyyy-MM-dd HH:mm'}}</p>
+
+    <h4>
+      <span class="label label-info">{{idea.views}} &nbsp;VIEWS</span> &nbsp;
+      <span class="label label-warning"> # VOTES</span> &nbsp;
+      <span class="label label-success"> # COMMENTS</span> &nbsp;
+    </h4>
+    <hr>
+        <br>
+        <div class="form-group">
+          <label for="inputId" class="col-lg-1 control-label">Id</label>
+          <div class="col-lg-10">
+            <input type="text" class="form-control" id="inputId" placeholder="id" ng-model="idea.$id" readonly>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputTitle" class="col-lg-1 control-label">Title</label>
+          <div class="col-lg-10">
+            <input type="text" class="form-control" id="inputTitle" placeholder="title" ng-model="idea.title" >
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputTags" class="col-lg-1 control-label">Tags</label>
+          <div class="col-lg-10">
+            <tags-input ng-model="idea.tags">
+            </tags-input>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputContent" class="col-lg-1 control-label">Memo</label>
+          <div class="col-lg-10">
+            <div text-angular ng-model="idea.content" ></div>
+          </div>
+        </div>
+        <br>
+
+    <hr>
     <div class="form-group">
-      <label for="inputId" class="col-lg-2 control-label">Id</label>
       <div class="col-lg-10">
-        <input type="text" class="form-control" id="inputId" placeholder="id" ng-model="device.$id" readonly>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="inputName" class="col-lg-2 control-label">Name</label>
-      <div class="col-lg-10">
-        <input type="text" class="form-control" id="inputName" placeholder="name" ng-model="device.name" >
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="selectType" class="col-lg-2 control-label">Type</label>
-      <div class="col-lg-10">
-        <select class="form-control" id="selectType" ng-model="device.type">
-          <option>Network: Gateway Firewall</option>
-          <option>Network: Load Balancer</option>
-          <option>Network: Router</option>
-          <option>Network: Switch</option>
-          <option>Server: Bare Metal</option>
-          <option>Server: Virtual</option>
-          <option>Storage: Appliance</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="selectEnvironment" class="col-lg-2 control-label">Environment</label>
-      <div class="col-lg-10">
-        <select class="form-control" id="selectEnvironment" ng-model="device.environment">
-          <option>DEV</option>
-          <option>TST</option>
-          <option>STG</option>
-          <option>PRD</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="selectLocation" class="col-lg-2 control-label">Location</label>
-      <div class="col-lg-10">
-        <!--<input type="text" class="form-control" id="inputLocationText" placeholder="location" ng-model="device.location" readonly >-->
-        <select class="form-control" id="selectLocation" ng-model="device.location">
-          <option>Atlanta, GA (ATL)</option>
-          <option>Chattanooga, TN (CHA)</option>
-          <option>Nashville, TN (BNA)</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="textAreaDescription" class="col-lg-2 control-label">Description</label>
-      <div class="col-lg-10">
-        <textarea class="form-control" rows="3" id="textArea" ng-model="device.description"></textarea>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="selectOS" class="col-lg-2 control-label">OS</label>
-      <div class="col-lg-10">
-        <select class="form-control" id="selectOS" ng-model="device.os">
-          <option>Linux (CentOS 5.x)</option>
-          <option>Linux (CentOS 6.x)</option>
-          <option>Linux (CentOS 7.x)</option>
-          <option>Linux (Ubuntu 12.04 LTS)</option>
-          <option>Linux (Ubuntu 12.10)</option>
-          <option>Linux (Ubuntu 14.04 LTS)</option>
-          <option>Linux (Ubuntu 14.10)</option>
-          <option>OSX (10.7 Lion)</option>
-          <option>OSX (10.8 Mountain Lion)</option>
-          <option>OSX (10.9 Mavericks)</option>
-          <option>OSX (10.10 Yosemite)</option>
-          <option>Windows (2008 Standard 64bit)</option>
-          <option>Windows (2008 R2 Standard 64bit)</option>
-          <option>Windows (2012 Standard 64bit)</option>
-          <option>Windows (2012 R2 Standard 64bit)</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="inputCPU" class="col-lg-2 control-label">CPU (Cores)</label>
-      <div class="col-lg-10">
-        <input type="text" class="form-control" id="inputCPU" placeholder="cpu" ng-model="device.cpu" >
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="inputRAM" class="col-lg-2 control-label">RAM (GB)</label>
-      <div class="col-lg-10">
-        <input type="text" class="form-control" id="inputRAM" placeholder="memory (GB)" ng-model="device.ram" >
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="inputDISK" class="col-lg-2 control-label">DISK (GB)</label>
-      <div class="col-lg-10">
-        <input type="text" class="form-control" id="inputDISK" placeholder="drives x disk (GB)" ng-model="device.disk" >
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="inputPublicIp" class="col-lg-2 control-label">Public IP</label>
-      <div class="col-lg-10">
-        <input type="text" class="form-control" id="inputPublicIp" placeholder="public_ip" ng-model="device.public_ip" >
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="inputPrivateIp" class="col-lg-2 control-label">Private IP</label>
-      <div class="col-lg-10">
-        <input type="text" class="form-control" id="inputPrivateIp" placeholder="private_ip" ng-model="device.private_ip" >
-      </div>
-    </div>
-    <div class="form-group">
-      <div class="col-lg-10 col-lg-offset-2">
-        <a href="#/devices" class="btn btn-xs btn-default">Cancel</a>
-        <button type="submit" class="btn btn-xs btn-primary">Save</button>
-        <a href="" ng-click='delete(device)' class="btn btn-xs btn-warning"><i class="fa fa-trash-o"> Delete</i></a>
+        <a href="#/ideas" class="btn btn-sm btn-default"><i class="fa fa-lg fa-times"></i> &nbsp;CANCEL</a>
+        <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-lg fa-floppy-o"></i> &nbsp;SAVE</button>
       </div>
     </div>
   </fieldset>
 </form>
+

@@ -16,6 +16,7 @@ app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebase
     $scope.questions = Questions();
     $scope.user = User;
     $scope.users = Users;
+    var ref = new Firebase(FIREBASE_URL + 'questions');
 
     // add a new question
     $scope.create = function() {
@@ -25,11 +26,12 @@ app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebase
         userId: $scope.question.userId || User.getId(),
         title: $scope.question.title,
         content: $scope.question.content,
-        tags: $scope.question.tags || [ 'tomcat', 'hadoop', 'node.js' ],
+        tags: $scope.question.tags,
         views: 0,
         createdAt: Firebase.ServerValue.TIMESTAMP
 
       }).then(function() {
+
         console.log('question Created');
 
         $state.go('questions');
@@ -50,7 +52,6 @@ app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebase
 
     // getQuestion on init for /question/edit/:id route
     $scope.getQuestion = function() {
-      var ref = new Firebase(FIREBASE_URL + 'questions');
       var question = ref.child($stateParams.questionId);
       $scope.question = $firebaseObject(question);
       question.child('views').transaction(function (views) {
@@ -69,6 +70,41 @@ app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebase
           $state.go(goTo);
         }
 
+      }).catch(function(error){
+        console.log(error);
+      });
+    };
+
+    $scope.addAnswer = function() {
+      var comment = {
+        content: $scope.answerContent,
+        userId: User.getId(),
+        createdAt: Firebase.ServerValue.TIMESTAMP
+      };
+      var question = ref.child($stateParams.questionId);
+
+      var answers = question.child('answers');
+
+      answers.push(comment);
+
+      answers.once("value", function(snapshot) {
+
+        question.update({
+          answerCount: snapshot.numChildren()
+        });
+      });
+
+    };
+
+    $scope.deleteAnswer = function(answer) {
+      var question = ref.child($stateParams.questionId);
+      var answers = question.child('answers');
+      console.log(answer);
+      answers.child(answer).remove().then(function(){
+        console.log('answer Deleted');
+        question.update({
+          answerCount: question.answerCount - 1
+        });
       }).catch(function(error){
         console.log(error);
       });
@@ -138,7 +174,6 @@ app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebase
     });
 
     // Listening for list updates to questions to update Table
-    var ref = new Firebase(FIREBASE_URL + 'questions');
     var list = $firebaseArray(ref);
     list.$watch(function(event) {
       console.log(event);
