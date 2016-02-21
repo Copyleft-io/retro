@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','ui.router', 'ngTable', 'ngTagsInput', 'textAngular'])
+var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','ui.router', 'ngTable', 'ngTagsInput', 'textAngular', 'elasticsearch'])
   .config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
       .state('home', {
@@ -216,6 +216,11 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
         url: '/memos/edit/{memoId}',
         templateUrl: 'memos/edit.html',
         controller: 'MemosCtrl as memosCtrl'
+      })
+      .state('elastic', {
+        url: '/elastic',
+        controller: 'ElasticCtrl as elasticCtrl',
+        templateUrl: 'elasticsearch/index.html'
       });
 
     $urlRouterProvider.otherwise('/')

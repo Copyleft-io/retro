@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller("MemosCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, Memos, User) {
+app.controller("MemosCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, Memos, User, esClient) {
 
     $scope.memos = Memos();
     $scope.user = User;
@@ -13,13 +13,41 @@ app.controller("MemosCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
 
     // CREATE - ADD A NEW MEMO TO FIREBASE
     $scope.create = function(memo) {
-      memo.createdAt = new Date().toString();
+      // Set Default Attributes on Create
+      //memo.createdAt = new Date().toString();
+      memo.createdAt = Firebase.ServerValue.TIMESTAMP;
       memo.createdBy = User.getEmail();
       memo.createdById = User.getId();
       memo.views = 1;
-      $scope.memos.$add(memo).then(function() {
-        console.log('[ MemosCtrl ] --> Memo Created');
 
+      // Add New Memo to synchronized firebaseArray
+      $scope.memos.$add(memo).then(function(newMemo) {
+        console.log('[ MemosCtrl ] --> Memo Created');
+        var refId = newMemo.key();
+        var memoObject = $scope.memos.$getRecord(newMemo.key());
+        var memoObjectTags = memoObject.tags;
+        var memoTagsArray = [];
+        memoObjectTags.forEach(function (tag) {
+          memoTagsArray.push(tag.text);
+        });
+
+        // Elastic Search Client
+        esClient.create({
+          index: 'memos',
+          type: 'memo',
+          id: refId,
+          body: {
+            title: memoObject.title,
+            content: memoObject.content,
+            tags: memoTagsArray,
+            createdAt: memoObject.createdAt,
+            createdBy: memoObject.createdBy,
+            createdById: memoObject.createdById
+          }
+        }, function (error, response) {
+            console.log(error);
+            console.log(response);
+        });
         //$location.path('/memos');
         $state.go('memos');
 
