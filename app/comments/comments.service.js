@@ -46,47 +46,77 @@ app.factory('Comments', function(FIREBASE_URL, $firebaseArray, $stateParams, Use
         };
 
         Comments.prototype.upVote = function(entityId, commentId) {
-            //TODO: save users to index
+
             var entity = this.ref.child(entityId);
             var comment = entity.child('comments/' + commentId);
+            comment.once("value", function(snap) {
+                var commentSnapshot = snap.val();
+                commentSnapshot.upvotes || (commentSnapshot.upvotes = []);
+                commentSnapshot.downvotes || (commentSnapshot.downvotes = []);
 
-            comment.upvotes || (comment.upvotes = []);
-            comment.downvotes || (comment.downvotes = []);
-            if (!(indexOf.call(comment.upvotes, User.getId()) >= 0)) {
-                console.log("Casting vote for " + User.getId());
-                comment.upvotes.push(User.getId());
-                deleteFromArray(comment.downvotes, User.getId());
+                if (!(indexOf.call(commentSnapshot.upvotes, User.getId()) >= 0)) {
+                    console.log("Casting vote for " + User.getId());
+                    commentSnapshot.upvotes.push(User.getId());
+                    deleteFromArray(commentSnapshot.downvotes, User.getId());
 
-            } else {
-                console.log("Removing vote");
-                deleteFromArray(comment.upvotes, User.getId());
-            }
+                } else {
+                    console.log("Removing vote");
+                    deleteFromArray(commentSnapshot.upvotes, User.getId());
+                }
 
-            comment.child('rank').transaction(function (count) {
-                return  comment.upvotes.length - comment.downvotes.length;
+                var rank = commentSnapshot.upvotes.length - commentSnapshot.downvotes.length;
+
+                comment.child('upvotes').transaction(function (count) {
+                    return commentSnapshot.upvotes;
+                });
+                comment.child('downvotes').transaction(function (count) {
+                    return commentSnapshot.downvotes;
+                });
+                comment.child('rank').transaction(function (count) {
+                    return commentSnapshot.upvotes.length - commentSnapshot.downvotes.length;
+                });
+
+                comment.setPriority(rank * -1);
             });
+
+
         };
 
         Comments.prototype.downVote = function(entityId, commentId) {
 
             var entity = this.ref.child(entityId);
             var comment = entity.child('comments/' + commentId);
+            comment.once("value", function(snap) {
+                var commentSnapshot = snap.val();
+                commentSnapshot.upvotes || (commentSnapshot.upvotes = []);
+                commentSnapshot.downvotes || (commentSnapshot.downvotes = []);
 
-            comment.upvotes || (comment.upvotes = []);
-            comment.downvotes || (comment.downvotes = []);
-            if (!(indexOf.call(comment.downvotes, User.getId()) >= 0)) {
-                console.log("Casting vote for " + User.getId());
-                comment.downvotes.push(User.getId());
-                deleteFromArray(comment.upvotes, User.getId());
+                if (!(indexOf.call(commentSnapshot.downvotes, User.getId()) >= 0)) {
+                    console.log("Casting vote for " + User.getId());
+                    commentSnapshot.downvotes.push(User.getId());
+                    deleteFromArray(commentSnapshot.upvotes, User.getId());
 
-            } else {
-                console.log("Removing vote");
-                deleteFromArray(comment.downvotes, User.getId());
-            }
+                } else {
+                    console.log("Removing vote");
+                    deleteFromArray(commentSnapshot.downvotes, User.getId());
+                }
 
-            comment.child('rank').transaction(function (count) {
-                return  comment.upvotes.length - comment.downvotes.length;
+                var rank = commentSnapshot.upvotes.length - commentSnapshot.downvotes.length;
+
+                comment.child('upvotes').transaction(function (count) {
+                    return commentSnapshot.upvotes;
+                });
+                comment.child('downvotes').transaction(function (count) {
+                    return commentSnapshot.downvotes;
+                });
+                comment.child('rank').transaction(function (count) {
+                    return commentSnapshot.upvotes.length - commentSnapshot.downvotes.length;
+                });
+
+                comment.setPriority(rank * -1);
+
             });
+
         };
 
         Comments.prototype.editComment = function(entityId, updatedContent) {

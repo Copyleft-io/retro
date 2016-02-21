@@ -29,6 +29,7 @@
       <a ng-if="user.getId() == answer.userId" href="" ng-click='comments.deleteComment(question.$id, key)' class="btn btn-xs btn-warning"><i class="fa fa-trash-o"> </i></a>
       <a href="" ng-click='comments.upVote(question.$id, key)' class="btn btn-xs "><i class="fa fa-arrow-up"> </i></a>
       <a href="" ng-click='comments.downVote(question.$id, key)' class="btn btn-xs "><i class="fa fa-arrow-down"> </i></a>
+      <span>{{answer.rank || 0}}</span>
       <div ta-bind ng-model="answer.content" ></div>
     </div>
   </a>
