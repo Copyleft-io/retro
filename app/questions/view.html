@@ -2,9 +2,9 @@
 <div class="well" ng-init="getQuestion()">
   <h2>{{question.title}}</h2>
   <h4>
-    <span class="btn btn-info">Views: {{question.views || 0}}</span> &nbsp;
-    <span ng-click="vote.up(question.$id)" class="btn btn-success">Up Votes: {{question.upvotes.length || 0}}</span> &nbsp;
-    <span ng-click="vote.down(question.$id)" class="btn btn-warning">Down Votes: {{question.downvotes.length || 0}}</span>
+    <span class="label label-info">Views: {{question.views || 0}}</span>
+    <span ng-click="vote.up(question.$id)" class="label label-success pointer">Up Votes: {{question.upvotes.length || 0}}</span>
+    <span ng-click="vote.down(question.$id)" class="label label-warning pointer">Down Votes: {{question.downvotes.length || 0}}</span>
   </h4>
   <p>
     <div ta-bind ng-model="question.content" ></div>

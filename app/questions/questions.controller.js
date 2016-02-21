@@ -34,11 +34,11 @@ app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebase
         createdAt: Firebase.ServerValue.TIMESTAMP
 
       }).then(function(newQuestion) {
-
+        newQuestion.setPriority(0);
         console.log('[ QuestionsCtrl ] --> Question Created');
         var refId = newQuestion.key();
         var questionObject = $scope.questions.$getRecord(newQuestion.key());
-        var questionObjectTags = questionObject.tags;
+        var questionObjectTags = questionObject.tags || [];
         var questionTagsArray = [];
         questionObjectTags.forEach(function (tag) {
           questionTagsArray.push(tag.text);
