@@ -97,36 +97,36 @@ For this project we utilized Elastic.co Cloud Service... which was very easy to 
 To host elastic on your local machine
 
 
-  var Firebase = require('firebase');
-  var ElasticSearch = require('elasticsearch');
+    var Firebase = require('firebase');
+    var ElasticSearch = require('elasticsearch');
 
-  // initialize our ElasticSearch API
-  var client = new ElasticSearch.Client({ host: '127.0.0.1:9200', log: 'trace' });
+    // initialize our ElasticSearch API
+    var client = new ElasticSearch.Client({ host: '127.0.0.1:9200', log: 'trace' });
 
-  // listen for changes to Firebase data
-  var fb = new Firebase('https://<your firebase>.firebaseio.com/<type>');
-  fb.on('child_added',   createOrUpdateIndex);
-  fb.on('child_changed', createOrUpdateIndex);
-  fb.on('child_removed', removeIndex);
+    // listen for changes to Firebase data
+    var fb = new Firebase('https://<your firebase>.firebaseio.com/<type>');
+    fb.on('child_added',   createOrUpdateIndex);
+    fb.on('child_changed', createOrUpdateIndex);
+    fb.on('child_removed', removeIndex);
 
-  function createOrUpdateIndex(snap) {
-     client.index({
-       index: '<your project>',
-       type: '<type>',
-       body: snap.val()
-     }, function (error, response) {
-        if (error) {
-          console.error(error);
-        } else {
-          console.log('indexed');
-          console.log(response);
-        }
-    });
-  };
+    function createOrUpdateIndex(snap) {
+       client.index({
+         index: '<your project>',
+         type: '<type>',
+         body: snap.val()
+       }, function (error, response) {
+          if (error) {
+            console.error(error);
+          } else {
+            console.log('indexed');
+            console.log(response);
+          }
+      });
+    };
 
-  function removeIndex(snap) {
-     client.deleteDocument(this.index, this.type, snap.key(), function(error, data) {
-        if( error ) console.error('failed to delete', snap.key(), error);
-        else console.log('deleted', snap.key());
-     });
-  };
+    function removeIndex(snap) {
+       client.deleteDocument(this.index, this.type, snap.key(), function(error, data) {
+          if( error ) console.error('failed to delete', snap.key(), error);
+          else console.log('deleted', snap.key());
+       });
+    };
