@@ -12,7 +12,7 @@
 
   <p>Tags:
   <span ng-repeat="(id, tag) in question.tags">
-    <a href="/questions/tagged/{{tag.text}}" title="show questions tagged '{{tag.text}}'" rel="tag" id="A_19">{{tag.text}}</a>
+    <a href="/questions/tagged/{{tag.text}}" title="show questions tagged '{{tag.text}}'" rel="tag" class="A_19">{{tag.text}}</a>
   </span>
   </p>
 
@@ -20,7 +20,6 @@
 
 <a href="#/questions" class="btn btn-sm btn-default">Back</a>
 <a ng-if="user.getId() == question.userId" href="#/questions/edit/{{question.$id}}" class="btn btn-sm btn-success"><i class="fa fa-pencil-square-o"> Edit</i></a>
-<a ng-if="user.getId() == question.userId" href="" ng-click='delete(question)' class="btn btn-sm btn-warning"><i class="fa fa-trash-o"> Delete</i></a>
 
 <div class="list-group" style="padding-top: 18px;">
   <a>

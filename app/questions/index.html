@@ -6,48 +6,48 @@
 
       <td>
 
-        <div id="result_block">
-          <div id="DIV_2">
-            <div id="DIV_3">
-              <div id="DIV_4">
-                <span id="SPAN_5">{{question.votes || 0}}</span>
+        <div class="result_block">
+          <div class="metric_container">
+            <div class="metric_display">
+              <div class="DIV_4">
+                <span>{{question.votes || 0}}</span>
               </div>
-              <div id="DIV_6">
+              <div class="DIV_6">
                 votes
               </div>
             </div>
-            <div id="DIV_7">
-              <div id="DIV_8">
-                <span id="SPAN_9">{{question.commentCount || 0}}</span>
+            <div class="metric_display">
+              <div class="DIV_4">
+                <span>{{question.commentCount || 0}}</span>
               </div>
-              <div id="DIV_10">
+              <div class="DIV_6">
                 answers
               </div>
             </div>
-            <div id="DIV_11">
-              <div id="DIV_12">
-                <span id="SPAN_13">{{question.views}}</span>
+            <div class="metric_display">
+              <div class="DIV_4">
+                <span>{{question.views}}</span>
               </div>
-              <div id="DIV_14">
+              <div class="DIV_6">
                 views
               </div>
             </div>
           </div>
-          <div id="DIV_15">
-            <h3 id="H3_16">
+          <div class="DIV_15">
+            <h3 class="displayTitle">
 
               <a ng-if="user.getId() == question.userId" href="#/questions/edit/{{question.$id}}" class="btn btn-xs btn-primary"><i class="fa fa-pencil-square-o"> </i></a>
               <a ng-if="user.getId() == question.userId" href="" ng-click='delete(question)' class="btn btn-xs btn-warning"><i class="fa fa-trash-o"> </i></a>
-              <a href="#/questions/{{question.$id}}" title="View question {{question.title}}" id="A_17">{{question.title}}</a>
+              <a href="#/questions/{{question.$id}}" title="View question {{question.title}}" class="A_17">{{question.title}}</a>
 
             </h3>
-            <div id="DIV_18">
+            <div class="DIV_18">
               <span ng-repeat="(id, tag) in question.tags">
-                <a href="/questions/tagged/{{tag.text}}" title="show questions tagged '{{tag.text}}'" rel="tag" id="A_19">{{tag.text}}</a>
+                <a href="/questions/tagged/{{tag.text}}" title="show questions tagged '{{tag.text}}'" rel="tag" class="A_19">{{tag.text}}</a>
               </span>
             </div>
-            <div id="DIV_21">
-              <span id="SPAN_23">{{question.createdAt | date:'yyyy-MM-dd HH:mm'}}</span></a> <a href="#/directory/user/{{question.userId}}" id="A_24">{{users.getDisplayName(question.userId)}}</a>
+            <div class="metric_container1">
+              <span class="SPAN_23">{{question.createdAt | date:'yyyy-MM-dd HH:mm'}}</span></a> <a href="#/directory/user/{{question.userId}}" class="A_24">{{users.getDisplayName(question.userId)}}</a>
             </div>
           </div>
         </div>
