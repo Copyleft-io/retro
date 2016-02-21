@@ -6,26 +6,37 @@
 
        <div class="row">
            <div class="col-lg-2 sidebar">
-               <h3>Search</h3>
+               <h4>Search by Tag</h4>
                <eui-searchbox field="'tags'"></eui-searchbox> <!-- ACTION: change to field to search on -->
-               <h3>Single select facet</h3>
-               <eui-singleselect field="'type'" size="5"></eui-singleselect> <!-- ACTION: change to field to use as facet -->
-               <h3>Multi select facet</h3>
-               <eui-checklist field="'CHANGE_TO_FIELD'" size="10"></eui-checklist> <!-- ACTION: change to field to use as facet -->
+               <h4>Search by Title</h4>
+               <eui-searchbox field="'title'"></eui-searchbox>
+               <h4>Filter by Type</h4>
+               <eui-singleselect field="'tags'" size="5">
+               </eui-singleselect> <!-- ACTION: change to field to use as facet -->
+               <!--<h3>Multi select facet</h3>
+               <eui-checklist field="'CHANGE_TO_FIELD'" size="10"></eui-checklist>--> <!-- ACTION: change to field to use as facet -->
+
                <h3>Results Per Page</h3>
                <select ng-model="indexVM.pageSize">
                    <option ng-repeat="item in [10, 20, 50, 100]">{{item}}</option>
                </select>
            </div>
-           <div class="col-lg-10 col-lg-offset-2 main">
+         </div>
+         <br>
+         <div class="row">
+           <div class="col-lg-10 col-lg-offset-2">
 
                <h1>Results</h1>
-               <ul>
-                   <li ng-repeat="doc in indexVM.results.hits.hits">
+               <table class="table">
+
+                   <tr ng-repeat="doc in indexVM.results.hits.hits">
+                      <td>
                        {{doc._source._id}} | {{doc._source.title}} | <br>
                        {{doc._source | json | limitTo: 500}} <!-- OPTIONAL: display more meaningful data instead of json -->
-                   </li>
-               </ul>
+                     </td>
+                   </tr>
+
+             </table>
                <eui-simple-paging></eui-simple-paging>
            </div>
        </div>
