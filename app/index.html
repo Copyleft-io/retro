@@ -68,19 +68,19 @@
 
               <!-- Only show if user is authenticated -->
 
-                      <li>
+                      <li ng-show="loggedin">
                         <a href="#/dashboard"><i class="fa fa-fw fa-dashboard"></i>&nbsp; Dashboard</a>
                       </li>
-                      <li>
+                      <li ng-show="loggedin">
                          <a href="#/directory"><i class="fa fa-book"></i>&nbsp; Directory</a>
                       </li>
-                      <li>
+                      <li ng-show="loggedin">
                           <a href="#/ideas"><i class="fa fa-fire">&nbsp; Ideas</i></a>
                       </li>
-                      <li>
+                      <li ng-show="loggedin">
                           <a href="#/memos"><i class="fa fa-newspaper-o"></i>&nbsp; Memos</a>
                       </li>
-                      <li>
+                      <li ng-show="loggedin">
                           <a href="#/questions"><i class="fa fa-fw fa-question-circle"></i>&nbsp; Questions</a>
                       </li>
 
