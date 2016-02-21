@@ -1,7 +1,7 @@
 
 <form class="form-horizontal well" ng-init="getMemo()">
     <fieldset>
-        <h2>{{memo.title}}</h2>
+        <h2><i class="fa fa-newspaper-o"></i> &nbsp;{{memo.title}}</h2>
         <p><strong>By</strong> <a href="#/directory/user/{{memo.createdById}}">{{users.getDisplayName(memo.createdById)}}</a>
             <br>{{memo.createdAt | date:'yyyy-MM-dd HH:mm'}}</p>
 
@@ -71,4 +71,3 @@
         </uib-tabset>
     </fieldset>
 </form>
-
