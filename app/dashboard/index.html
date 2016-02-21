@@ -1,11 +1,104 @@
 
 <div ng-controller="DashboardCtrl" eui-index="'memos'"><!-- ACTION: change to index name -->
+<h2><i class="fa fa-lg fa-dashboard"></i> &nbsp;Dashboard</h2><br>
 
+  <div class="row">
+     <div class="col-lg-3 col-md-6">
+         <div class="panel panel-red">
+             <div class="panel-heading">
+                 <div class="row">
+                     <div class="col-xs-3">
+                         <i class="fa fa-fire fa-5x"></i>
+                     </div>
+                     <div class="col-xs-9 text-right">
+                         <div class="huge">26</div>
+                         <div class="lead">Questions</div>
+                     </div>
+                 </div>
+             </div>
+             <a href="#/questions">
+                 <div class="panel-footer">
+                     <span class="pull-left">View Details</span>
+                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                     <div class="clearfix"></div>
+                 </div>
+             </a>
+         </div>
+     </div>
+     <div class="col-lg-3 col-md-6">
+         <div class="panel panel-yellow">
+             <div class="panel-heading">
+                 <div class="row">
+                     <div class="col-xs-3">
+                         <i class="fa fa-lightbulb-o fa-5x"></i>
+                     </div>
+                     <div class="col-xs-9 text-right">
+                         <div class="huge">12</div>
+                         <div class="lead">Ideas</div>
+                     </div>
+                 </div>
+             </div>
+             <a href="#/ideas">
+                 <div class="panel-footer">
+                     <span class="pull-left">View Details</span>
+                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                     <div class="clearfix"></div>
+                 </div>
+             </a>
+         </div>
+     </div>
+     <div class="col-lg-3 col-md-6">
+         <div class="panel panel-green">
+             <div class="panel-heading">
+                 <div class="row">
+                     <div class="col-xs-3">
+                         <i class="fa fa-file-text-o fa-5x"></i>
+                     </div>
+                     <div class="col-xs-9 text-right">
+                         <div class="huge">124</div>
+                         <div class="lead">Memos</div>
+                     </div>
+                 </div>
+             </div>
+             <a href="#/memos">
+                 <div class="panel-footer">
+                     <span class="pull-left">View Details</span>
+                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                     <div class="clearfix"></div>
+                 </div>
+             </a>
+         </div>
+     </div>
+     <div class="col-lg-3 col-md-6">
+         <div class="panel panel-primary">
+             <div class="panel-heading">
+                 <div class="row">
+                     <div class="col-xs-3">
+                         <i class="fa fa-tag fa-5x"></i>
+                     </div>
+                     <div class="col-xs-9 text-right">
+                         <div class="huge">13</div>
+                         <div class="lead">Tags</div>
+                     </div>
+                 </div>
+             </div>
+             <a href="#/tags">
+                 <div class="panel-footer">
+                     <span class="pull-left">View Details</span>
+                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                     <div class="clearfix"></div>
+                 </div>
+             </a>
+         </div>
+     </div>
+ </div>
+               <!-- /.row -->
+               <br>
    <div class="container-fluid">
        <h2><i class="fa fa-lg fa-search"></i> &nbsp;Search</h2>
        <hr><br>
        <div class="row">
-           <div class="col-lg-3 col-lg-offset-1">
+           <div class="col-lg-3">
                <span class="lead"> Search by Tag</span>&nbsp; <eui-searchbox field="'tags'"></eui-searchbox> <br><br><!-- ACTION: change to field to search on -->
                <span class="lead"> Search by Title</span>&nbsp; <eui-searchbox field="'title'"></eui-searchbox><br><br>
                <span class="lead">Results Per Page</span>&nbsp;
@@ -21,7 +114,7 @@
          </div>
          <br><hr>
          <div class="row">
-           <div class="col-lg-10 col-lg-offset-1">
+           <div class="col-lg-10">
 
                <h1>Results</h1>
                <table class="table">
