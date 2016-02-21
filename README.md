@@ -1,6 +1,12 @@
 # 2016 Static Showdown
 
+<img src="app/images/retrofire.png">
 ## Project: ss16-retrofire  (a.k.a Retrofire)
+
+
+### What is Retrofire?
+
+### Core Features
 
 ### Core Components
 
