@@ -65,12 +65,6 @@ app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
         });
     };
 
-    $scope.addComment = function(newContent) {
-        $scope.comments.postComment(newContent);
-
-        $scope.newContent = "";
-    };
-
     $scope.upVote = function(scopeObject) {
 
         var scopeObject = scopeObject || $scope.idea;

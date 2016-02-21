@@ -31,8 +31,6 @@
         </div>
       </div>
 
-      </div>
-
       <br>
     </uib-tab>
     <uib-tab>
@@ -61,7 +59,7 @@
               <div text-angular ng-model="newContent" ></div>
             </div>
           </div>
-          <a href="" ng-click='addComment(newContent)' class="btn btn-sm btn-success"><i class="fa fa-plus"> </i> ADD COMMENT</a>
+          <a href="" ng-click='comments.createComment(idea.$id, newContent); newContent=null' class="btn btn-sm btn-success"><i class="fa fa-plus"> </i> ADD COMMENT</a>
         </div>
       </div>
     </uib-tab>
@@ -70,7 +68,7 @@
   <div class="form-group">
     <div class="col-lg-10">
       <a href="#/ideas" class="btn btn-sm btn-default"><i class="fa fa-lg fa-arrow-left"></i> &nbsp;BACK</a>
-      <a href="#/ideas/edit/{{idea.$id}}" class="btn btn-sm btn-success"><i class="fa fa-lg fa-pencil-square-o"> &nbsp;EDIT</i></a>
+      <a ng-if="user.getId() == idea.userId" href="#/ideas/edit/{{idea.$id}}" class="btn btn-sm btn-success"><i class="fa fa-lg fa-pencil-square-o"> &nbsp;EDIT</i></a>
     </div>
   </div>
   </uib-tabset>
