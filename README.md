@@ -13,13 +13,16 @@ Built with <3 by the Hobbyists at Copyleft.io
 ### Core Features
 
 #### Answer Burning Questions
-Quickly put out the fires that are of greatest interest to your team! Give visibility to the questions that need very much to be answered.
+- Quickly put out the fires that are of greatest interest to your team!
+- Give visibility to the questions that need very much to be answered.
 
 #### Spark New Ideas
-Turn up the lights and shine a spotlight on the creativity in your organization! Give visibility to the new ideas that your team generates everyday.
+- Turn up the lights and shine a spotlight on the creativity in your organization!
+- Give visibility to the new ideas that your team generates everyday.
 
 #### Fuel Knowledge Transfer
-Knowledge is the kindling that sets change into motion! Give visibility to the thought leaders who fuel innovation on your team.
+- Knowledge is the kindling that sets change into motion!
+- Give visibility to the thought leaders who fuel innovation on your team.
 
 #### Firebase & Elastic Search
 Index and Search in Real-Time
