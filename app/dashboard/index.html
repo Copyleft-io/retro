@@ -127,8 +127,8 @@
                    <tr ng-repeat="doc in indexVM.results.hits.hits">
 
                      <td>{{doc._type}} </td>
-                     <td><a href="#/{{doc._type}}s/{{doc._source.firebaseId}}"> {{doc._source.title}} </a> </td>
-                     <td>{{doc._source.firebaseId}}</td>
+                     <td><a href="#/{{doc._type}}s/{{doc._id}}"> {{doc._source.title}} </a> </td>
+                     <td>{{doc._id}}</td>
                    </tr>
 
              </table>
