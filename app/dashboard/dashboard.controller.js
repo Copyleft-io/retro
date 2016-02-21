@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('DashboardCtrl', function($state, $scope, elasticui, elasticuiProvider){
+app.controller('DashboardCtrl', function($state, $scope, elasticui){
     var DashboardCtrl = this;
 
   });
