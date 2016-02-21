@@ -41,7 +41,7 @@
                         <div class="list-group-item" ng-repeat="(key, comment) in memo.comments">
                             <label>{{users.getDisplayName(comment.userId)}}</label>
                             <label style="font-weight: normal; font-size: 12px; color: grey;">{{memo.createdAt | date:'yyyy-MM-dd HH:mm'}}</label>
-                            <a ng-if="user.getId() == memo.userId" href="" ng-click='comments.deleteComment(memo.$id, key)' class="btn btn-xs btn-warning"><i class="fa fa-trash-o"> </i></a>
+                            <a ng-if="user.getId() == comment.userId" href="" ng-click='comments.deleteComment(memo.$id, key)' class="btn btn-xs btn-warning"><i class="fa fa-trash-o"> </i></a>
                             <div ta-bind ng-model="comment.content" ></div>
                         </div>
                     </a>
