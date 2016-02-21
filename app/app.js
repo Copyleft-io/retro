@@ -227,6 +227,6 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
 
   })
 .constant('FIREBASE_URL', 'https://ss16-retrofire.firebaseio.com/')
-.constant('euiHost', 'http://80edaedca1e8ae1c1dc2521c374443e1.us-east-1.aws.found.io:9200');
+.constant('euiHost', 'https://80edaedca1e8ae1c1dc2521c374443e1.us-east-1.aws.found.io:9243');
 
 console.log('--> retrofire/app/app.js loaded');
