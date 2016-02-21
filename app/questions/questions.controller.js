@@ -11,7 +11,7 @@ var deleteFromArray = function (array, element) {
 
 var indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Users, Vote, Comments, Questions) {
+app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Users, Vote, Comments, Questions, esClient) {
 
     $scope.questions = Questions();
     $scope.user = User;
@@ -33,8 +33,34 @@ app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebase
         views: 0,
         createdAt: Firebase.ServerValue.TIMESTAMP
 
-      }).then(function() {
+      }).then(function(newQuestion) {
 
+        console.log('[ QuestionsCtrl ] --> Question Created');
+        var refId = newQuestion.key();
+        var questionObject = $scope.questions.$getRecord(newQuestion.key());
+        var questionObjectTags = questionObject.tags;
+        var questionTagsArray = [];
+        questionObjectTags.forEach(function (tag) {
+          questionTagsArray.push(tag.text);
+        });
+
+        // Elastic Search Client Create A New Index
+        esClient.create({
+          index: 'retrofire',
+          type: 'question',
+          id: refId,
+          body: {
+            questionId: refId,
+            title: questionObject.title,
+            content: questionObject.content,
+            tags: questionTagsArray,
+            createdAt: questionObject.createdAt,
+            createdById: questionObject.userId
+          }
+        }, function (error, response) {
+            console.log(error);
+            console.log(response);
+        });
         console.log('question Created');
 
         $state.go('questions');
@@ -46,8 +72,17 @@ app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebase
 
     // remove an question
     $scope.delete = function(question) {
-        $scope.questions.$remove(question).then(function(){
+        $scope.questions.$remove(question).then(function(deletedQuestion){
             console.log('question Deleted');
+            var refId = deletedQuestion.key();
+            esClient.delete({
+                index: 'retrofire',
+                type: 'question',
+                id: refId
+              }, function (error, response) {
+                // ...
+              });
+            // redirect to /memos path after delete
         }).catch(function(error){
             console.log(error);
         });
@@ -66,8 +101,37 @@ app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebase
     $scope.update = function(goTo) {
       // save firebaseObject
       $scope.question.updatedAt = Firebase.ServerValue.TIMESTAMP;
-      $scope.question.$save().then(function(){
+      $scope.question.$save().then(function(updatedQuestion){
         console.log('question Updated');
+
+        var refId = updatedQuestion.key();
+        var questionObject = $scope.questions.$getRecord(updatedQuestion.key());
+        var questionObjectTags = questionObject.tags;
+        var questionTagsArray = [];
+        questionObjectTags.forEach(function (tag) {
+          questionTagsArray.push(tag.text);
+        });
+
+        // Elastic Search Client Update an Existing Index
+        esClient.update({
+          index: 'retrofire',
+          type: 'question',
+          id: refId,
+          body: {
+            doc : {
+              questionId: refId,
+              title: questionObject.title,
+              content: questionObject.content,
+              tags: questionTagsArray,
+              createdAt: questionObject.createdAt,
+              createdById: questionObject.userId
+            }
+        }
+        }, function (error, response) {
+            console.log(error);
+            console.log(response);
+        });
+        console.log('question Created');
 
         if (goTo != null) {
           $state.go(goTo);

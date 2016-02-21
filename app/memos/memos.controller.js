@@ -34,10 +34,11 @@ app.controller("MemosCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
 
         // Elastic Search Client Create A New Index
         esClient.create({
-          index: 'memos',
+          index: 'retrofire',
           type: 'memo',
           id: refId,
           body: {
+            memoId: refId,
             title: memoObject.title,
             content: memoObject.content,
             tags: memoTagsArray,
@@ -101,11 +102,11 @@ app.controller("MemosCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
     // UPDATE - EDIT A MEMO AND SAVE IT TO FIREBASE
     $scope.update = function() {
       // save firebaseObject
-      $scope.memo.$save().then(function(newMemo){
+      $scope.memo.$save().then(function(updatedMemo){
         console.log('[ MemosCtrl ] --> Memo Updated');
         console.log('[ MemosCtrl ] --> Memo Created');
-        var refId = newMemo.key();
-        var memoObject = $scope.memos.$getRecord(newMemo.key());
+        var refId = updatedMemo.key();
+        var memoObject = $scope.memos.$getRecord(updatedMemo.key());
         var memoObjectTags = memoObject.tags;
         var memoTagsArray = [];
         memoObjectTags.forEach(function (tag) {
@@ -114,11 +115,12 @@ app.controller("MemosCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
 
         // Elastic Search Client Create A New Index
         esClient.update({
-          index: 'memos',
+          index: 'retrofire',
           type: 'memo',
           id: refId,
           body: {
             doc: {
+              memoId: refId,
               title: memoObject.title,
               content: memoObject.content,
               tags: memoTagsArray,
@@ -144,7 +146,7 @@ app.controller("MemosCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
             console.log('[ MemosCtrl ] --> Memo Deleted');
             var refId = deletedMemo.key();
             esClient.delete({
-                index: 'memos',
+                index: 'retrofire',
                 type: 'memo',
                 id: refId
               }, function (error, response) {
