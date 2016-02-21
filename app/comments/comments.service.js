@@ -19,13 +19,8 @@ app.factory('Comments', function(FIREBASE_URL, $firebaseArray, $stateParams, Use
             var refChild = entityChild.child('comments');
             refChild.push(comment);
 
-            var ref = this.ref;
-            entityChild.once("value", function(snapshot) {
-
-              ref.update({
-                commentCount: snapshot.numChildren()
-              });
-
+            entityChild.child('commentCount').transaction(function (count) {
+              return (count || 0)  + 1;
             });
 
         };
@@ -34,10 +29,11 @@ app.factory('Comments', function(FIREBASE_URL, $firebaseArray, $stateParams, Use
             //return this.ref.child(id).remove();
             console.log(entityId);
             console.log(commentId);
-            var ref = this.ref.child(entityId);
-            ref.child('comments').child(commentId).remove().then(function(){
+            var entityChild = this.ref.child(entityId);
+
+            entityChild.child('comments').child(commentId).remove().then(function(){
               console.log('Comment Deleted');
-              ref.child('commentCount').transaction(function (count) {
+              entityChild.child('commentCount').transaction(function (count) {
                 return (count || 1)  - 1;
               });
             }).catch(function(error){
