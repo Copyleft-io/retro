@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','ui.router', 'ngTable', 'ngTagsInput', 'textAngular', 'elasticsearch'])
+var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','ui.router', 'ngTable', 'ngTagsInput', 'textAngular','elasticui'])
   .config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
       .state('home', {
@@ -226,6 +226,7 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
     $urlRouterProvider.otherwise('/')
 
   })
-.constant('FIREBASE_URL', 'https://ss16-retrofire.firebaseio.com/');
+.constant('FIREBASE_URL', 'https://ss16-retrofire.firebaseio.com/')
+.constant('euiHost', 'http://80edaedca1e8ae1c1dc2521c374443e1.us-east-1.aws.found.io:9200');
 
 console.log('--> retrofire/app/app.js loaded');
