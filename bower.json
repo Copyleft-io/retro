@@ -35,7 +35,7 @@
     "angular-mocks": "^1.4.3"
   },
   "appPath": "app",
-  "moduleName": "starterlog",
+  "moduleName": "retrofire",
   "resolutions": {
     "angular": "^1.4.3"
   }
