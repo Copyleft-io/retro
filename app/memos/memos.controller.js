@@ -25,10 +25,11 @@ app.controller("MemosCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
 
       // Add New Memo to synchronized firebaseArray
       $scope.memos.$add(memo).then(function(newMemo) {
+        newMemo.setPriority(0);
         console.log('[ MemosCtrl ] --> Memo Created');
         var refId = newMemo.key();
         var memoObject = $scope.memos.$getRecord(newMemo.key());
-        var memoObjectTags = memoObject.tags;
+        var memoObjectTags = memoObject.tags || [];
         var memoTagsArray = [];
         memoObjectTags.forEach(function (tag) {
           memoTagsArray.push(tag.text);

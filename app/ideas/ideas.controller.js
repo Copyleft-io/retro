@@ -13,11 +13,12 @@ app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
         idea.userId = User.getId();
         idea.views = 0;
         $scope.ideas.$add(idea).then(function(newIdea) {
+            newIdea.setPriority(0);
             console.log('idea Created');
 
             var refId = newIdea.key();
             var ideaObject = $scope.ideas.$getRecord(newIdea.key());
-            var ideaObjectTags = ideaObject.tags;
+            var ideaObjectTags = ideaObject.tags || [];
             var ideaTagsArray = [];
             ideaObjectTags.forEach(function (tag) {
               ideaTagsArray.push(tag.text);
