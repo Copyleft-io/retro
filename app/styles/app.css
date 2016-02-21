@@ -99,6 +99,53 @@
   outline: rgb(34, 36, 38) none 0px;
 }/*.DIV_15*/
 
+.votes {
+  display: inline-block;
+  height: 38px;
+  min-width: 38px;
+  margin: 0 3px 0 0;
+  font-size: 13px;
+  color: #292929;
+  padding: 5px 5px 6px 5px;
+  text-align: center;
+}
+
+.mini-counts {
+  font-size: 30px;
+  font-weight: 300;
+  color: #292929;
+  margin-bottom: 4px;
+}
+
+.tags {
+  line-height: 18px;
+  float: left;
+}
+
+.tag-box {
+  color: #44769d;
+  font-size: 12px;
+  white-space: nowrap;
+  background: #E1ECF4;
+  border: 1px solid #E1ECF4;
+  display: inline-block;
+  margin: 2px 2px 2px 0;
+  border-radius: 0;
+}
+
+.created_by_place {
+  width: auto;
+  line-height: inherit;
+  padding-top: 4px;
+  white-space: nowrap;
+  float: right;
+}
+
+.create_by_view {
+  font-size: 12px;
+  color: #0077CC;
+}
+
 .displayTitle {
   height: 20px;
   text-align: left;

@@ -1,12 +1,55 @@
-<h3><i class="fa fa-lightbulb-o"></i> &nbsp; Ideas</h3>
+<div style="padding-bottom:16px;">
+    <h3><i class="fa fa-lightbulb-o"></i> &nbsp; Ideas</h3>
+</div>
+
 
 <table ng-table="tableIdeas" class="table " show-filter="false">
 
     <tr ng-repeat="idea in $data | orderBy:'idea.votes'">
 
         <td>
+            <div class="col-lg-2 col-md-4">
+                <div class="votes">
+                    <div>
+                        {{idea.votes || 0}}
+                    </div>
+                    <div>
+                        votes
+                    </div>
+                </div>
+                <div class="votes">
+                    <div>
+                        {{idea.commentCount || 0}}
+                    </div>
+                    <div>
+                        comments
+                    </div>
+                </div>
+                <div class="votes">
+                    <div>
+                        {{idea.views || 0}}
+                    </div>
+                    <div>
+                        views
+                    </div>
+                </div>
 
-            <div class="result_block">
+            </div>
+            <div class="col-lg-10 col-md-8">
+                <div style="font-size: 18px;">
+                    <a href="#/ideas/{{idea.$id}}" style="color: #005999;">{{idea.title}}</a>
+                    <a ng-if="user.getId() == idea.userId" href="#/ideas/edit/{{idea.$id}}" class="btn btn-xs btn-primary"><i class="fa fa-puzzle-piece"> </i></a>
+                    <a ng-if="user.getId() == idea.userId" href="" ng-click='delete(idea)' class="btn btn-xs btn-warning"><i class="fa fa-trash-o"> </i></a>
+                </div>
+
+                <div ng-repeat="(id, tag) in idea.tags" class="tags tag-box">
+                    <a href="/ideas/tagged/{{tag.text}}" title="show questions tagged '{{tag.text}}'" rel="tag">{{tag.text}}</a>
+                </div>
+                <div class="created_by_place">
+                    <a href="#/directory/user/{{idea.userId}}">{{users.getDisplayName(idea.userId)}}</a> | {{idea.createdAt | date:'yyyy-MM-dd HH:mm'}}
+                </div>
+            </div>
+            <!--<div class="result_block">
                 <div class="metric_container">
                     <div class="metric_display">
                         <div class="DIV_4">
@@ -33,7 +76,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="DIV_15">
+                <div >
                     <h3 class="displayTitle">
 
                         <a ng-if="user.getId() == idea.userId" href="#/ideas/edit/{{idea.$id}}" class="btn btn-xs btn-primary"><i class="fa fa-puzzle-piece"> </i></a>
@@ -41,17 +84,17 @@
                         <a href="#/ideas/{{idea.$id}}" title="View Idea - {{idea.title}}" class="A_17">{{idea.title}}</a>
 
                     </h3>
-                    <div class="DIV_18">
+                    <div >
           <span ng-repeat="(id, tag) in idea.tags">
             <a href="/ideas/tagged/{{tag.text}}" title="show questions tagged '{{tag.text}}'" rel="tag" class="A_19">{{tag.text}}</a>
           </span>
 
                     </div>
-                    <div class="metric_container1">
+                    <div style="float:right;">
                         <span class="SPAN_23">{{idea.createdAt | date:'yyyy-MM-dd HH:mm'}}</span></a> <a href="#/directory/user/{{idea.userId}}" class="A_24">{{users.getDisplayName(idea.userId)}}</a>
                     </div>
                 </div>
-            </div>
+            </div>-->
 
 
         </td>
