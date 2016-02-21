@@ -38,7 +38,7 @@ app.controller("MemosCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
           type: 'memo',
           id: refId,
           body: {
-            memoId: refId,
+            firebaseId: refId,
             title: memoObject.title,
             content: memoObject.content,
             tags: memoTagsArray,
@@ -120,7 +120,7 @@ app.controller("MemosCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
           id: refId,
           body: {
             doc: {
-              memoId: refId,
+              firebaseId: refId,
               title: memoObject.title,
               content: memoObject.content,
               tags: memoTagsArray,

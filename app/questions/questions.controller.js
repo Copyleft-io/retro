@@ -50,7 +50,7 @@ app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebase
           type: 'question',
           id: refId,
           body: {
-            questionId: refId,
+            firebaseId: refId,
             title: questionObject.title,
             content: questionObject.content,
             tags: questionTagsArray,
@@ -119,7 +119,7 @@ app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebase
           id: refId,
           body: {
             doc : {
-              questionId: refId,
+              firebaseId: refId,
               title: questionObject.title,
               content: questionObject.content,
               tags: questionTagsArray,

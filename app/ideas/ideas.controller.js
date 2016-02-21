@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Users, Comments, Ideas) {
+app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Users, Comments, Ideas, esClient) {
     $scope.ideas = Ideas();
     $scope.comments = new Comments("ideas");
     console.log("Comments: " + $scope.comments);
@@ -12,8 +12,35 @@ app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
         idea.createdAt = Firebase.ServerValue.TIMESTAMP;
         idea.userId = User.getId();
         idea.views = 0;
-        $scope.ideas.$add(idea).then(function() {
+        $scope.ideas.$add(idea).then(function(newIdea) {
             console.log('idea Created');
+
+            var refId = newIdea.key();
+            var ideaObject = $scope.ideas.$getRecord(newIdea.key());
+            var ideaObjectTags = ideaObject.tags;
+            var ideaTagsArray = [];
+            ideaObjectTags.forEach(function (tag) {
+              ideaTagsArray.push(tag.text);
+            });
+
+            // Elastic Search Client Create A New Index
+            esClient.create({
+              index: 'retrofire',
+              type: 'idea',
+              id: refId,
+              body: {
+                firebaseId: refId,
+                title: ideaObject.title,
+                content: ideaObject.content,
+                tags: ideaTagsArray,
+                createdAt: ideaObject.createdAt,
+                createdById: ideaObject.userId
+              }
+            }, function (error, response) {
+                console.log(error);
+                console.log(response);
+            });
+
             $state.go('ideas');
 
         }).catch(function(error) {
@@ -23,8 +50,16 @@ app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
 
     // remove an idea
     $scope.delete = function(idea) {
-        $scope.ideas.$remove(idea).then(function(){
+        $scope.ideas.$remove(idea).then(function(deletedIdea){
             console.log('idea Deleted');
+            var refId = deletedIdea.key();
+            esClient.delete({
+                index: 'retrofire',
+                type: 'idea',
+                id: refId
+              }, function (error, response) {
+                // ...
+              });
         }).catch(function(error){
             console.log(error);
         });
@@ -53,8 +88,36 @@ app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
     $scope.update = function(goTo) {
         // save firebaseObject
         $scope.idea.updatedAt = Firebase.ServerValue.TIMESTAMP;
-        $scope.idea.$save().then(function(){
+        $scope.idea.$save().then(function(updatedIdea){
             console.log('idea Updated');
+
+            var refId = updatedIdea.key();
+            var ideaObject = $scope.ideas.$getRecord(updatedIdea.key());
+            var ideaObjectTags = ideaObject.tags;
+            var ideaTagsArray = [];
+            ideaObjectTags.forEach(function (tag) {
+              ideaTagsArray.push(tag.text);
+            });
+
+            // Elastic Search Client Create A New Index
+            esClient.update({
+              index: 'retrofire',
+              type: 'idea',
+              id: refId,
+              body: {
+                doc: {
+                  firebaseId: refId,
+                  title: ideaObject.title,
+                  content: ideaObject.content,
+                  tags: ideaTagsArray,
+                  createdAt: ideaObject.createdAt,
+                  createdById: ideaObject.userId
+                }
+              }
+            }, function (error, response) {
+                console.log(error);
+                console.log(response);
+            });
 
             if (goTo != null) {
                 $state.go(goTo);
