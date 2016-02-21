@@ -36,18 +36,15 @@
     <uib-tab>
       <uib-tab-heading> <i class="fa fa-comment"></i> Comments </uib-tab-heading>
       <br>
-      <div class="row">
-        <br><div class="col-lg-offset-1">
-        <p class="lead">Comments</p>
-        <div ng-repeat="comment in idea.comments">
-          <p><a href="#/directory/user/{{comment.createdById}}">{{users.getDisplayName(comment.userId)}}</a> | {{comment.createdAt | date:'yyyy-MM-dd HH:mm'}}</p>
-          <div class="well">
+      <div class="list-group" style="padding-top: 18px;">
+        <a>
+          <div class="list-group-item" ng-repeat="(key, comment) in idea.comments">
+            <label>{{users.getDisplayName(idea.userId)}}</label>
+            <label style="font-weight: normal; font-size: 12px; color: grey;">{{idea.createdAt | date:'yyyy-MM-dd HH:mm'}}</label>
+            <a ng-if="user.getId() == idea.userId" href="" ng-click='comments.deleteComment(idea.$id, key)' class="btn btn-xs btn-warning"><i class="fa fa-trash-o"> </i></a>
             <div ta-bind ng-model="comment.content" ></div>
-            </p>
           </div>
-          <br>
-        </div>
-      </div>
+        </a>
       </div>
       <div class="row">
         <br>
