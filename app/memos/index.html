@@ -45,10 +45,9 @@
             <span ng-repeat="(id, tag) in memo.tags">
               <a href="/memos/tagged/{{tag.text}}" title="show memos tagged '{{tag.text}}'" rel="tag" class="A_19">{{tag.text}}</a>
             </span>
-
               </div>
               <div class="metric_container1">
-                <span class="SPAN_23">{{question.createdAt | date:'yyyy-MM-dd HH:mm'}}</span></a> <a href="#/directory/user/{{question.userId}}" class="A_24">{{users.getDisplayName(question.userId)}}</a>
+                <span class="SPAN_23">{{memo.createdAt | date:'yyyy-MM-dd HH:mm'}}</span></a> <a href="#/directory/user/{{memo.userId}}" class="A_24">{{users.getDisplayName(memo.createdById)}}</a>
               </div>
             </div>
           </div>

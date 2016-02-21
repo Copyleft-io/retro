@@ -3,7 +3,7 @@
   <fieldset>
 <h2>{{memo.title}}</h2>
 <p><strong>By</strong> <a href="#/directory/user/{{memo.createdById}}">{{memo.createdBy}}</a>
-  <br>{{memo.createdAt}}</p>
+  <br>{{memo.createdAt | date:'yyyy-MM-dd HH:mm'}}</p>
 
   <h4>
     <span class="label label-info">{{memo.views}} &nbsp;VIEWS</span> &nbsp;
