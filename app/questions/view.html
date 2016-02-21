@@ -1,6 +1,6 @@
 
 <div class="well" ng-init="getQuestion()">
-  <h2>{{question.title}}</h2>
+  <h2><i class="fa fa-question-circle"></i> &nbsp;{{question.title}}</h2>
   <h4>
     <span class="label label-info">Views: {{question.views || 0}}</span>
     <span ng-click="vote.up(question.$id)" class="label label-success pointer">Up Votes: {{question.upvotes.length || 0}}</span>
