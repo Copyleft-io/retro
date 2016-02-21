@@ -1,9 +1,10 @@
 'use strict';
 
-app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Users, Comments, Ideas, esClient) {
+app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Users, Comments, Ideas, esClient, Vote) {
     $scope.ideas = Ideas();
     $scope.comments = new Comments("ideas");
     console.log("Comments: " + $scope.comments);
+    $scope.vote = new Vote('ideas');
     $scope.user = User;
     $scope.users = Users;
 
