@@ -25,9 +25,9 @@ app.controller("QuestionsCtrl", function($state, $scope, FIREBASE_URL, $firebase
       $scope.questions.$add({
 
         userId: $scope.question.userId || User.getId(),
-        title: $scope.question.title,
-        content: $scope.question.content,
-        tags: $scope.question.tags,
+        title: $scope.question.title || User.getId(),
+        content: $scope.question.content || '',
+        tags: $scope.question.tags || [],
         views: 0,
         createdAt: Firebase.ServerValue.TIMESTAMP
 
