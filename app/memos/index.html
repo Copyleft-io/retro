@@ -1,63 +1,59 @@
-<h3><i class="fa fa-newspaper-o"></i> &nbsp; Memos</h3>
-
-<br/>
-    <table ng-table="tableMemos" class="table" show-filter="false">
-      <tr ng-repeat="memo in $data">
-
-        <td>
-
-          <div class="result_block">
-            <div class="metric_container">
-              <div class="metric_display">
-                <div class="DIV_4">
-                  <span >{{memo.votes || 0}}</span>
-                </div>
-                <div class="DIV_6">
-                  votes
-                </div>
-              </div>
-              <div class="metric_display">
-                <div class="DIV_4">
-                  <span>{{memo.commentCount || 0}}</span>
-                </div>
-                <div class="DIV_6">
-                  comments
-                </div>
-              </div>
-              <div class="metric_display">
-                <div class="DIV_4">
-                  <span>{{memo.views}}</span>
-                </div>
-                <div class="DIV_6">
-                  views
-                </div>
-              </div>
-            </div>
-            <div class="DIV_15">
-              <h3 class="displayTitle">
-
-                <a ng-if="user.getId() == memo.createdById" href="#/memos/edit/{{memo.$id}}" class="btn btn-xs btn-primary"><i class="fa fa-puzzle-piece"> </i></a>
-                <a ng-if="user.getId() == memo.createdById" href="" ng-click='delete(memo)' class="btn btn-xs btn-warning"><i class="fa fa-trash-o"> </i></a>
-                <a href="#/memos/{{memo.$id}}" title="View memo {{memo.title}}" class="A_17">{{memo.title}}</a>
-
-              </h3>
-              <div class="DIV_18">
-            <span ng-repeat="(id, tag) in memo.tags">
-              <a href="#/tagged/{{tag.text}}" title="show memos tagged '{{tag.text}}'" rel="tag" class="A_19">{{tag.text}}</a>
-            </span>
-              </div>
-              <div class="metric_container1">
-                <span class="SPAN_23">{{memo.createdAt | date:'yyyy-MM-dd HH:mm'}}</span></a> <a href="#/directory/user/{{memo.userId}}" class="A_24">{{users.getDisplayName(memo.createdById)}}</a>
-              </div>
-            </div>
-          </div>
-
-
-        </td>
-
-
-      </tr>
-    </table>
-    <a href="#/memos/create" class="btn btn-sm btn-success pull-left" style="padding:10px;"><i class="fa fa-lg fa-plus"></i> &nbsp;CREATE MEMO</a>
-
+<div style="padding-bottom:16px;">
+  <h3><i class="fa fa-newspaper-o"></i> &nbsp; Memos</h3>
 </div>
+
+
+<table ng-table="tableMemos" class="table " show-filter="false">
+
+  <tr ng-repeat="memo in $data | orderBy:'memo.votes'">
+
+    <td>
+      <div class="col-lg-2 col-md-4">
+        <div class="entity_stats_display">
+          <div>
+            {{memo.votes || 0}}
+          </div>
+          <div>
+            votes
+          </div>
+        </div>
+        <div class="entity_stats_display">
+          <div>
+            {{memo.commentCount || 0}}
+          </div>
+          <div>
+            comments
+          </div>
+        </div>
+        <div class="entity_stats_display">
+          <div>
+            {{memo.views || 0}}
+          </div>
+          <div>
+            views
+          </div>
+        </div>
+
+      </div>
+      <div class="col-lg-10 col-md-8">
+        <div>
+          <a href="#/memos/{{memo.$id}}" class="entity_title">{{memo.title}}</a>
+          <a ng-if="user.getId() == memo.userId" href="#/memos/edit/{{memo.$id}}" class="btn btn-xs btn-primary"><i class="fa fa-puzzle-piece"> </i></a>
+          <a ng-if="user.getId() == memo.userId" href="" ng-click='delete(memo)' class="btn btn-xs btn-warning"><i class="fa fa-trash-o"> </i></a>
+        </div>
+
+        <div ng-repeat="(id, tag) in memo.tags" class="tags tag-box">
+          <a href="#/tagged/{{tag.text}}" title="show questions tagged '{{tag.text}}'" rel="tag">{{tag.text}}</a>
+        </div>
+        <div class="created_by_place">
+          <a href="#/directory/user/{{memo.userId}}">{{users.getDisplayName(memo.createdById)}}</a> | {{memo.createdAt | date:'yyyy-MM-dd HH:mm'}}
+        </div>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<div class="row">
+  <a href="#/memos/create" class="btn btn-sm btn-primary pull-left" style="padding:10px;"><i class="fa fa-lg fa-plus"></i> &nbsp;Create a Memo</a>
+</div>
+
