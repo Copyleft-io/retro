@@ -99,7 +99,12 @@
   outline: rgb(34, 36, 38) none 0px;
 }/*.DIV_15*/
 
-.votes {
+.entity_title {
+  color: #005999;
+  font-size: 18px;
+}
+
+.entity_stats_display {
   display: inline-block;
   height: 38px;
   min-width: 38px;

@@ -1,68 +1,58 @@
-<h3><i class="fa fa-question-circle"></i> &nbsp; Questions</h3>
+<div style="padding-bottom:16px;">
+  <h3><i class="fa fa-lightbulb-o"></i> &nbsp; Questions</h3>
+</div>
+
 
 <table ng-table="tablequestions" class="table " show-filter="false">
 
-    <tr ng-repeat="question in $data">
+  <tr ng-repeat="question in $data | orderBy:'question.votes'">
 
-      <td>
-
-        <div class="result_block">
-          <div class="metric_container">
-            <div class="metric_display">
-              <div class="DIV_4">
-                <span>{{question.votes || 0}}</span>
-              </div>
-              <div class="DIV_6">
-                votes
-              </div>
-            </div>
-            <div class="metric_display">
-              <div class="DIV_4">
-                <span>{{question.commentCount || 0}}</span>
-              </div>
-              <div class="DIV_6">
-                answers
-              </div>
-            </div>
-            <div class="metric_display">
-              <div class="DIV_4">
-                <span>{{question.views}}</span>
-              </div>
-              <div class="DIV_6">
-                views
-              </div>
-            </div>
+    <td>
+      <div class="col-lg-2 col-md-4">
+        <div class="entity_stats_display">
+          <div>
+            {{question.votes || 0}}
           </div>
-          <div class="DIV_15">
-            <h3 class="displayTitle">
-
-              <a ng-if="user.getId() == question.userId" href="#/questions/edit/{{question.$id}}" class="btn btn-xs btn-primary"><i class="fa fa-pencil-square-o"> </i></a>
-              <a ng-if="user.getId() == question.userId" href="" ng-click='delete(question)' class="btn btn-xs btn-warning"><i class="fa fa-trash-o"> </i></a>
-              <a href="#/questions/{{question.$id}}" title="View question {{question.title}}" class="A_17">{{question.title}}</a>
-
-            </h3>
-            <div class="DIV_18">
-              <span ng-repeat="(id, tag) in question.tags">
-                <a href="#/tagged/{{tag.text}}" title="show questions tagged '{{tag.text}}'" rel="tag" class="A_19">{{tag.text}}</a>
-              </span>
-            </div>
-            <div class="metric_container1">
-              <span class="SPAN_23">{{question.createdAt | date:'yyyy-MM-dd HH:mm'}}</span></a> <a href="#/directory/user/{{question.userId}}" class="A_24">{{users.getDisplayName(question.userId)}}</a>
-            </div>
+          <div>
+            votes
+          </div>
+        </div>
+        <div class="entity_stats_display">
+          <div>
+            {{question.commentCount || 0}}
+          </div>
+          <div>
+            comments
+          </div>
+        </div>
+        <div class="entity_stats_display">
+          <div>
+            {{question.views || 0}}
+          </div>
+          <div>
+            views
           </div>
         </div>
 
+      </div>
+      <div class="col-lg-10 col-md-8">
+        <div>
+          <a href="#/questions/{{question.$id}}" class="entity_title">{{question.title}}</a>
+          <a ng-if="user.getId() == question.userId" href="#/questions/edit/{{question.$id}}" class="btn btn-xs btn-primary"><i class="fa fa-puzzle-piece"> </i></a>
+          <a ng-if="user.getId() == question.userId" href="" ng-click='delete(question)' class="btn btn-xs btn-warning"><i class="fa fa-trash-o"> </i></a>
+        </div>
 
-      </td>
-
-
-    </tr>
-
+        <div ng-repeat="(id, tag) in question.tags" class="tags tag-box">
+          <a href="#/tagged/{{tag.text}}" title="show questions tagged '{{tag.text}}'" rel="tag">{{tag.text}}</a>
+        </div>
+        <div class="created_by_place">
+          <a href="#/directory/user/{{question.userId}}">{{users.getDisplayName(question.userId)}}</a> | {{question.createdAt | date:'yyyy-MM-dd HH:mm'}}
+        </div>
+      </div>
+    </td>
+  </tr>
 </table>
 
-
 <div class="row">
-
   <a href="#/questions/create" class="btn btn-sm btn-primary pull-left" style="padding:10px;"><i class="fa fa-lg fa-plus"></i> &nbsp;Ask a Question</a>
-
 </div>
