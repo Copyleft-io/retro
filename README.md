@@ -92,10 +92,25 @@ You have a couple of options...
   - Spin up your own localhost:9200 via Node & NPM
   - Utilize Elastic.co (http://www.elastic.co/cloud) Found for a Free 14 Day Trial for Elastic as a Service in the cloud.
 
-For this project we utilized Elastic.co Cloud Service... which was very easy to setup. Once your instance is live you will be provided with two URLs (HTTP / HTTPS). You will need to use the HTTP URL if you are hosting on firebase as all traffic will need to be over HTTPS.
+For this project we utilized Elastic.co Cloud Service... we built all of our elastic index creates, updates, and deletes directly into the user interactions (create, update, delete) for our components which was very easy to setup. Once your instance is live you will be provided with two URLs (HTTP / HTTPS). You will need to use the HTTP URL if you are hosting on firebase as all traffic will need to be over HTTPS.  We define this as a constant in our app.js
 
-To host elastic on your local machine
 
+If you want to host a node.js synchronization process to listen for change events and update your indexes...
+
+On a linux server of your choice install Node and NPM.
+
+Run `npm init` to initialize a new node application
+
+Add the following npm dependencies in a package.json
+
+    "dependencies": {
+      "elasticsearch": "^10.1.3",
+      "firebase": "^2.4.0"
+    }
+
+Run `npm install` to install the dependencies.
+
+Create a file elastic-firebase-client.js
 
     var Firebase = require('firebase');
     var ElasticSearch = require('elasticsearch');
@@ -130,3 +145,9 @@ To host elastic on your local machine
           else console.log('deleted', snap.key());
        });
     };
+
+Run the client using
+
+    node elastic-firebase-client.js
+
+A side note:  You can use PM2 (https://github.com/Unitech/pm2) as a Production Process Manager to configure this node service to run continuously... It allows you to keep applications alive forever, to reload them without downtime and to facilitate common system admin tasks.
