@@ -2,7 +2,7 @@
 
 <table ng-table="tableIdeas" class="table " show-filter="false">
 
-    <tr ng-repeat="idea in $data">
+    <tr ng-repeat="idea in $data | orderBy:'idea.votes'">
 
         <td>
 
