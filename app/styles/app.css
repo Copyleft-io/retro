@@ -6,7 +6,13 @@
 
 /* Global Styles */
 
-/* Table Styling */
+.img-component {
+  height: 200px;
+  width: 200px;
+}
+
+
+/* Index Table Styling */
 #result_block {
   color: rgb(34, 36, 38);
   float: left;
