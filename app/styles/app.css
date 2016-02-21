@@ -30,6 +30,7 @@
 .result_block {
   float: left;
   height: 60px;
+  width: 100%;
   text-align: left;
   font: normal normal normal normal 13px / 16.9px Arial, 'Helvetica Neue', Helvetica, sans-serif;
   overflow: hidden;
@@ -89,6 +90,7 @@
 .DIV_15 {
   float: left;
   height: 52.25px;
+  width: 85%;
   text-align: left;
   perspective-origin: 265px 26.125px;
   transform-origin: 265px 26.125px;
@@ -119,7 +121,6 @@
   float: left;
   height: 27px;
   text-align: left;
-  width: 123.031px;
   perspective-origin: 61.5156px 13.5px;
   transform-origin: 61.5156px 13.5px;
   font: normal normal normal normal 13px / 18px Arial, 'Helvetica Neue', Helvetica, sans-serif;
@@ -132,7 +133,7 @@
   height: 16px;
   text-align: left;
   white-space: nowrap;
-  width: 200px;
+  /*width: 200px;*/
   perspective-origin: 75.0156px 10px;
   transform-origin: 75.0156px 10px;
   font: normal normal normal normal 13px / 16.9px Arial, 'Helvetica Neue', Helvetica, sans-serif;
