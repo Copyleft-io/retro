@@ -44,6 +44,9 @@ Index and Search in Real-Time
 
 ## Setup
 
+### Create your Firebase
+Visit https://firebase.com and create your firebase application
+
 ### Download git project
 
 Use git clone to download the project...
@@ -59,6 +62,10 @@ Run npm install to install all backend node package dependencies...
 Run bower install for all frontend bower package dependencies...
 
     $ bower install
+
+### Update the FIREBASE_URL constant in the app.js to your Firebase
+
+    .constant('FIREBASE_URL', 'https://<your firebase>.firebaseio.com/')
 
 ### Serve the Application with Livereload
 
@@ -92,7 +99,7 @@ You have a couple of options...
   - Spin up your own localhost:9200 via Node & NPM
   - Utilize Elastic.co (http://www.elastic.co/cloud) Found for a Free 14 Day Trial for Elastic as a Service in the cloud.
 
-For this project we utilized Elastic.co Cloud Service... we built all of our elastic index creates, updates, and deletes directly into the user interactions (create, update, delete) for our components which was very easy to setup. Once your instance is live you will be provided with two URLs (HTTP / HTTPS). You will need to use the HTTP URL if you are hosting on firebase as all traffic will need to be over HTTPS.  We define this as a constant in our app.js
+For this project we utilized Elastic.co Cloud Service... we built all of our elastic index creates, updates, and deletes directly into the user interactions (create, update, delete) for our components which was very easy to setup. Once your instance is live you will be provided with two URLs (HTTP / HTTPS). You will need to use the HTTPS URL if you are hosting on firebase as all traffic will need to be over HTTPS.  We define this as a constant in our app.js
 
 
 If you want to host a node.js synchronization process to listen for change events and update your indexes...
