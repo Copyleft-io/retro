@@ -6,15 +6,13 @@
     <span ng-click="vote.up(question.$id)" class="label label-success pointer">Up Votes: {{question.upvotes.length || 0}}</span>
     <span ng-click="vote.down(question.$id)" class="label label-warning pointer">Down Votes: {{question.downvotes.length || 0}}</span>
   </h4>
-  <p>
-    <div ta-bind ng-model="question.content" ></div>
-  </p>
-
   <p>Tags:
   <span ng-repeat="(id, tag) in question.tags">
     <a href="/questions/tagged/{{tag.text}}" title="show questions tagged '{{tag.text}}'" rel="tag" class="A_19">{{tag.text}}</a>
   </span>
   </p>
+
+  <div class="panel panel-body" ta-bind ng-model="question.content" ></div>
 
 </div>
 
