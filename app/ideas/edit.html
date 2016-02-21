@@ -1,7 +1,7 @@
 
 <form class="form-horizontal well" ng-submit="update('ideas')" ng-init="getIdea()">
   <fieldset>
-    <legend>Edit Idea</legend>
+    <legend><i class="fa fa-lightbulb-o"></i> &nbsp;Edit Idea</legend>
     <br>
     <p><strong>By</strong> <a href="#/directory/user/{{idea.createdById}}">{{users.getDisplayName(idea.userId)}}</a>
       <br>{{idea.createdAt | date:'yyyy-MM-dd HH:mm'}}</p>
@@ -49,4 +49,3 @@
     </div>
   </fieldset>
 </form>
-

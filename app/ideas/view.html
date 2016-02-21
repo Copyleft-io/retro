@@ -1,7 +1,7 @@
 
 <form class="form-horizontal well" ng-init="getIdea()">
 <fieldset>
-  <h2>{{idea.title}}</h2>
+  <h2><i class="fa fa-lightbulb-o"></i> &nbsp;{{idea.title}}</h2>
   <p><strong>By</strong> <a href="#/directory/user/{{idea.userId}}">{{users.getDisplayName(idea.userId)}}</a>
     <br>{{idea.createdAt | date:'yyyy-MM-dd HH:mm'}}</p>
 
