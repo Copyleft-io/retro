@@ -38,7 +38,7 @@
 
                         <a ng-if="user.getId() == idea.userId" href="#/ideas/edit/{{idea.$id}}" class="btn btn-xs btn-primary"><i class="fa fa-puzzle-piece"> </i></a>
                         <a ng-if="user.getId() == idea.userId" href="" ng-click='delete(idea)' class="btn btn-xs btn-warning"><i class="fa fa-trash-o"> </i></a>
-                        <a href="#/ideas/view/{{idea.$id}}" title="View Idea - {{idea.title}}" class="A_17">{{idea.title}}</a>
+                        <a href="#/ideas/{{idea.$id}}" title="View Idea - {{idea.title}}" class="A_17">{{idea.title}}</a>
 
                     </h3>
                     <div class="DIV_18">

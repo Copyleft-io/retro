@@ -38,7 +38,7 @@
 
                 <a ng-if="user.getId() == memo.createdById" href="#/memos/edit/{{memo.$id}}" class="btn btn-xs btn-primary"><i class="fa fa-puzzle-piece"> </i></a>
                 <a ng-if="user.getId() == memo.createdById" href="" ng-click='delete(memo)' class="btn btn-xs btn-warning"><i class="fa fa-trash-o"> </i></a>
-                <a href="#/memos/view/{{memo.$id}}" title="View memo {{memo.title}}" class="A_17">{{memo.title}}</a>
+                <a href="#/memos/{{memo.$id}}" title="View memo {{memo.title}}" class="A_17">{{memo.title}}</a>
 
               </h3>
               <div class="DIV_18">
