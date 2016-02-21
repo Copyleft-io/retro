@@ -1,5 +1,6 @@
 'use strict';
 
+
 var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','ui.router', 'ngTable', 'ngTagsInput', 'textAngular','elasticui', 'elasticsearch'])
   .config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
@@ -53,11 +54,7 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
         controller: 'ProfileCtrl as profileCtrl',
         templateUrl: 'users/profile.html',
         resolve: {
-          auth: function($state, Users, Auth){
-            return Auth.$requireAuth().catch(function(){
-              $state.go('home');
-            });
-          },
+          auth: requireAuth,
           profile: function(Users, Auth){
             return Auth.$requireAuth().then(function(auth){
               return Users.getProfile(auth.uid).$loaded();
@@ -70,11 +67,7 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
         controller: 'DashboardCtrl as dashboardCtrl',
         templateUrl: 'dashboard/index.html',
         resolve: {
-          auth: function($state, Users, Auth){
-            return Auth.$requireAuth().catch(function(){
-              $state.go('login');
-            });
-          },
+          auth: requireAuth,
           dashboard: function(Users, Auth){
             return Auth.$requireAuth().then(function(auth){
               return Users.getProfile(auth.uid).$loaded();
@@ -87,11 +80,7 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
         controller: 'DirectoryCtrl as directoryCtrl',
         templateUrl: 'directory/index.html',
         resolve: {
-          auth: function($state, Users, Auth){
-            return Auth.$requireAuth().catch(function(){
-              $state.go('login');
-            });
-          },
+          auth: requireAuth,
           dashboard: function(Users, Auth){
             return Auth.$requireAuth().then(function(auth){
               return Users.getProfile(auth.uid).$loaded();
@@ -109,6 +98,7 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
         controller: 'QuestionsCtrl as questionsCtrl',
         templateUrl: 'questions/index.html',
         resolve: {
+          auth: requireAuth,
           questions: function (Questions){
             return Questions();
           }
@@ -117,17 +107,20 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
       .state('questions/create', {
         url: '/questions/create',
         templateUrl: 'questions/create.html',
-        controller: 'QuestionsCtrl as questionsCtrl'
+        controller: 'QuestionsCtrl as questionsCtrl',
+        resolve: { auth: requireAuth }
       })
       .state('questions/edit', {
         url: '/questions/edit/{questionId}',
         templateUrl: 'questions/edit.html',
-        controller: 'QuestionsCtrl as questionsCtrl'
+        controller: 'QuestionsCtrl as questionsCtrl',
+          resolve: { auth: requireAuth }
       })
       .state('questions/view', {
         url: '/questions/{questionId}',
         templateUrl: 'questions/view.html',
-        controller: 'QuestionsCtrl as questionsCtrl'
+        controller: 'QuestionsCtrl as questionsCtrl',
+        resolve: { auth: requireAuth }
       })
       .state('ideas', {
           url: '/ideas',
@@ -137,48 +130,26 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
               ideas: function (Ideas) {
                   return Ideas();
               },
-              auth: function ($state, Users, Auth) {
-                  return Auth.$requireAuth().catch(function () {
-                      $state.go('home')
-                  });
-              }
+              auth: requireAuth
           }
       })
       .state('ideas/create', {
-          url: '/ideas/create',
-          templateUrl: 'ideas/create.html',
-          controller: 'IdeasCtrl as ideasCtrl',
-          resolve: {
-              auth: function ($state, Users, Auth) {
-                  return Auth.$requireAuth().catch(function () {
-                      $state.go('home')
-                  });
-              }
-          }
+        url: '/ideas/create',
+        templateUrl: 'ideas/create.html',
+        controller: 'IdeasCtrl as ideasCtrl',
+        resolve: { auth: requireAuth }
       })
         .state('ideas/edit', {
-            url: '/ideas/edit/{ideaId}',
-            templateUrl: 'ideas/edit.html',
-            controller: 'IdeasCtrl as ideasCtrl',
-            resolve: {
-                auth: function ($state, Users, Auth) {
-                    return Auth.$requireAuth().catch(function () {
-                        $state.go('home')
-                    });
-                }
-            }
+          url: '/ideas/edit/{ideaId}',
+          templateUrl: 'ideas/edit.html',
+          controller: 'IdeasCtrl as ideasCtrl',
+          resolve: { auth: requireAuth }
         })
         .state('ideas/view', {
-            url: '/ideas/view/{ideaId}',
-            templateUrl: 'ideas/view.html',
-            controller: 'IdeasCtrl as ideasCtrl',
-            resolve: {
-                auth: function ($state, Users, Auth) {
-                    return Auth.$requireAuth().catch(function () {
-                        $state.go('home')
-                    });
-                }
-            }
+          url: '/ideas/view/{ideaId}',
+          templateUrl: 'ideas/view.html',
+          controller: 'IdeasCtrl as ideasCtrl',
+          resolve: { auth: requireAuth }
         })
       .state('memos', {
         url: '/memos',
@@ -188,34 +159,26 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
           requests: function (Memos){
              return Memos();
            },
-          auth: function($state, Users, Auth){
-            return Auth.$requireAuth().catch(function(){
-              $state.go('home');
-            });
-          }
+          auth: requireAuth
         }
       })
       .state('memos/create', {
         url: '/memos/create',
         templateUrl: 'memos/create.html',
         controller: 'MemosCtrl as memosCtrl',
-        resolve: {
-          auth: function($state, Users, Auth){
-            return Auth.$requireAuth().catch(function(){
-              $state.go('home');
-            });
-          }
-        }
+        resolve: { auth: requireAuth }
       })
       .state('memos/view', {
         url: '/memos/view/{memoId}',
         templateUrl: 'memos/view.html',
-        controller: 'MemosCtrl as memosCtrl'
+        controller: 'MemosCtrl as memosCtrl',
+        resolve: { auth: requireAuth }
       })
       .state('memos/edit', {
         url: '/memos/edit/{memoId}',
         templateUrl: 'memos/edit.html',
-        controller: 'MemosCtrl as memosCtrl'
+        controller: 'MemosCtrl as memosCtrl',
+        resolve: { auth: requireAuth }
       })
       .state('elastic', {
         url: '/elastic',
