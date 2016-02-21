@@ -1,7 +1,8 @@
 language: node
 sudo: false
-before_script: npm install -g grunt grunt-cli
-script: grunt build
+before_install: npm install -g grunt-cli
+install: npm install
+before_script: npm run build
 cache:
   directories:
   - node_modules
