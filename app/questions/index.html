@@ -18,7 +18,7 @@
             </div>
             <div id="DIV_7">
               <div id="DIV_8">
-                <span id="SPAN_9">0</span>
+                <span id="SPAN_9">{{answerCount || 0}}</span>
               </div>
               <div id="DIV_10">
                 answers
@@ -36,16 +36,15 @@
           <div id="DIV_15">
             <h3 id="H3_16">
 
-              <a ng-if="user.getId() == question.userId" href="#/questions/edit/{{question.$id}}" class="btn btn-xs btn-primary"><i class="fa fa-puzzle-piece"> </i></a>
+              <a ng-if="user.getId() == question.userId" href="#/questions/edit/{{question.$id}}" class="btn btn-xs btn-primary"><i class="fa fa-pencil-square-o"> </i></a>
               <a ng-if="user.getId() == question.userId" href="" ng-click='delete(question)' class="btn btn-xs btn-warning"><i class="fa fa-trash-o"> </i></a>
               <a href="#/questions/{{question.$id}}" title="View question {{question.title}}" id="A_17">{{question.title}}</a>
 
             </h3>
             <div id="DIV_18">
-          <span ng-repeat="(id, tag) in question.tags">
-            <a href="/questions/tagged/{{tag.text}}" title="show questions tagged '{{tag.text}}'" rel="tag" id="A_19">{{tag.text}}</a>
-          </span>
-
+              <span ng-repeat="(id, tag) in question.tags">
+                <a href="/questions/tagged/{{tag.text}}" title="show questions tagged '{{tag.text}}'" rel="tag" id="A_19">{{tag.text}}</a>
+              </span>
             </div>
             <div id="DIV_21">
               <span id="SPAN_23">{{question.createdAt | date:'yyyy-MM-dd HH:mm'}}</span></a> <a href="#/directory/user/{{question.userId}}" id="A_24">{{users.getDisplayName(question.userId)}}</a>
