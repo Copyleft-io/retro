@@ -1,7 +1,9 @@
 'use strict';
 
-app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Users, Ideas) {
+app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObject, $firebaseArray, $stateParams, ngTableParams, $filter, User, Users, Comments, Ideas) {
     $scope.ideas = Ideas();
+    $scope.comments = new Comments("ideas");
+    console.log("Comments: " + $scope.comments);
     $scope.user = User;
     $scope.users = Users;
 
@@ -64,14 +66,8 @@ app.controller("IdeasCtrl", function($state, $scope, FIREBASE_URL, $firebaseObje
     };
 
     $scope.addComment = function(newContent) {
-        var comment = {
-            content: newContent,
-            userId: User.getId(),
-            createdAt: Firebase.ServerValue.TIMESTAMP
-        };
-        var ref = new Firebase(FIREBASE_URL + 'ideas/' + $stateParams.ideaId);
-        var refChild = ref.child('comments');
-        refChild.push(comment);
+        $scope.comments.postComment(newContent);
+
         $scope.newContent = "";
     };
 
