@@ -27,7 +27,7 @@ app.factory('Vote', function(FIREBASE_URL, User) {
                     deleteFromArray(entitySnapshot.upvotes, User.getId());
                 }
 
-                var rank = entitySnapshot.upvotes.length - entitySnapshot.downvotes.length;
+                var votes = entitySnapshot.upvotes.length - entitySnapshot.downvotes.length;
 
                 entity.child('upvotes').transaction(function (count) {
                     return entitySnapshot.upvotes;
@@ -35,11 +35,11 @@ app.factory('Vote', function(FIREBASE_URL, User) {
                 entity.child('downvotes').transaction(function (count) {
                     return entitySnapshot.downvotes;
                 });
-                entity.child('rank').transaction(function (count) {
-                    return entitySnapshot.upvotes.length - entitySnapshot.downvotes.length;
+                entity.child('votes').transaction(function (count) {
+                    return votes;
                 });
 
-                entity.setPriority(rank * -1);
+                entity.setPriority(votes * -1);
             });
 
 
@@ -63,7 +63,7 @@ app.factory('Vote', function(FIREBASE_URL, User) {
                     deleteFromArray(entitySnapshot.downvotes, User.getId());
                 }
 
-                var rank = entitySnapshot.upvotes.length - entitySnapshot.downvotes.length;
+                var votes = entitySnapshot.upvotes.length - entitySnapshot.downvotes.length;
 
                 entity.child('upvotes').transaction(function (count) {
                     return entitySnapshot.upvotes;
@@ -71,11 +71,11 @@ app.factory('Vote', function(FIREBASE_URL, User) {
                 entity.child('downvotes').transaction(function (count) {
                     return entitySnapshot.downvotes;
                 });
-                entity.child('rank').transaction(function (count) {
-                    return entitySnapshot.upvotes.length - entitySnapshot.downvotes.length;
+                entity.child('votes').transaction(function (count) {
+                    return votes;
                 });
 
-                entity.setPriority(rank * -1);
+                entity.setPriority(votes * -1);
 
             });
 
