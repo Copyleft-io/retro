@@ -43,7 +43,7 @@
                 </div>
 
                 <div ng-repeat="(id, tag) in idea.tags" class="tags tag-box">
-                    <a href="/ideas/tagged/{{tag.text}}" title="show questions tagged '{{tag.text}}'" rel="tag">{{tag.text}}</a>
+                    <a href="#/tagged/{{tag.text}}" title="show questions tagged '{{tag.text}}'" rel="tag">{{tag.text}}</a>
                 </div>
                 <div class="created_by_place">
                     <a href="#/directory/user/{{idea.userId}}">{{users.getDisplayName(idea.userId)}}</a> | {{idea.createdAt | date:'yyyy-MM-dd HH:mm'}}
