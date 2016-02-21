@@ -1,0 +1,21 @@
+<div class="well" ng-init="getIdsByTag()">
+
+    <h2><i class="fa fa-question-circle"></i> Items Tagged {{tag}}</h2>
+
+    <table ng-table="tagResults" class="table " show-filter="false">
+
+        <tr>
+            <td>Title</td>
+            <td>Author</td>
+            <td>Created Date</td>
+        </tr>
+        <tr ng-repeat="tag in tagged[tag]">
+            <td><a href="#/{{tag._type}}s/{{tag._id}}" title="View '{{tag._source.title}}'" class="A_19">{{tag._source.title}}</a></td>
+            <td>{{users.getDisplayName(( tag._source.userId || tag._source.createdById) )}}</td>
+            <td>{{tag._source.createdAt | date:'yyyy-MM-dd HH:mm'}}</td>
+
+        </tr>
+
+    </table>
+
+</div>

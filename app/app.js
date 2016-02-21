@@ -135,6 +135,12 @@ var app = angular.module('retrofire', ['firebase','angular-md5','ui.bootstrap','
         controller: 'QuestionsCtrl as questionsCtrl',
         resolve: { auth: requireAuth }
       })
+      .state('tagged', {
+        url: '/tagged/{tag}',
+        templateUrl: 'dashboard/tagged.html',
+        controller: 'TaggedCtrl as taggedCtrl',
+        resolve: { auth: requireAuth }
+      })
       .state('ideas', {
           url: '/ideas',
           controller: 'IdeasCtrl as ideasCtrl',
